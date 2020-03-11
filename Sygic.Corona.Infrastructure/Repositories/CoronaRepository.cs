@@ -18,7 +18,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
         }
         public async Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken)
         {
-            await context.Database.EnsureCreatedAsync(cancellationToken);
+            //await context.Database.EnsureCreatedAsync(cancellationToken);
             await context.Profiles.AddAsync(profile, cancellationToken);
         }
 
@@ -27,6 +27,13 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return await context.Profiles.OrderByDescending(x => x.Id)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<bool> AlreadyCreated(string deviceId, CancellationToken cancellationToken)
+        {
+            var profile = await context.Profiles.FirstOrDefaultAsync(x => x.DeviceId == deviceId, cancellationToken);
+
+            return profile != null;
         }
     }
 }

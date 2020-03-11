@@ -9,5 +9,6 @@ namespace Sygic.Corona.Domain
         IUnitOfWork UnitOfWork { get; }
         Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken);
         Task<long> GetLastId(CancellationToken cancellationToken);
+        Task<bool> AlreadyCreated(string deviceId, CancellationToken cancellationToken);
     }
 }
