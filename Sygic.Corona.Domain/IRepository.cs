@@ -8,7 +8,9 @@ namespace Sygic.Corona.Domain
     {
         IUnitOfWork UnitOfWork { get; }
         Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken);
-        Task<long> GetLastId(CancellationToken cancellationToken);
-        Task<bool> AlreadyCreated(string deviceId, CancellationToken cancellationToken);
+        Task CreateContactAsync(Contact contact, CancellationToken cancellationToken);
+        Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<uint> GetLastIdAsync(CancellationToken cancellationToken);
+        Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken);
     }
 }

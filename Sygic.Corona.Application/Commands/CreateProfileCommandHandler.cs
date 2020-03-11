@@ -17,12 +17,12 @@ namespace Sygic.Corona.Application.Commands
         }
         public async Task<CreateProfileResponse> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
         {
-            long lastId = await repository.GetLastId(cancellationToken);
-            long nextId = lastId + 1;
+            uint lastId = await repository.GetLastIdAsync(cancellationToken);
+            uint nextId = lastId + 1;
             var location = new Location(request.Latitude, request.Longitude, request.Accuracy);
             var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale, location, request.AuthToken);
 
-            if (await repository.AlreadyCreated(profile.DeviceId, cancellationToken))
+            if (await repository.AlreadyCreatedAsync(profile.DeviceId, cancellationToken))
             {
                 throw new ArgumentException("Profile already created.");
             }

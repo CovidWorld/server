@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sygic.Corona.Contracts\Sygic.Corona.Contracts.csproj" />
     <ProjectReference Include="..\Sygic.Corona.Domain\Sygic.Corona.Domain.csproj" />
+    <ProjectReference Include="..\Sygic.Corona.Infrastructure\Sygic.Corona.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

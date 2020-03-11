@@ -22,14 +22,24 @@ namespace Sygic.Corona.Infrastructure.Repositories
             await context.Profiles.AddAsync(profile, cancellationToken);
         }
 
-        public async Task<long> GetLastId(CancellationToken cancellationToken)
+        public async Task CreateContactAsync(Contact contact, CancellationToken cancellationToken)
+        {
+            await context.Contacts.AddAsync(contact, cancellationToken);
+        }
+
+        public Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        {
+            return context.Profiles.SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);
+        }
+
+        public async Task<uint> GetLastIdAsync(CancellationToken cancellationToken)
         {
             return await context.Profiles.OrderByDescending(x => x.Id)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<bool> AlreadyCreated(string deviceId, CancellationToken cancellationToken)
+        public async Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken)
         {
             var profile = await context.Profiles.FirstOrDefaultAsync(x => x.DeviceId == deviceId, cancellationToken);
 
