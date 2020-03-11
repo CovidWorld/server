@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -24,7 +24,7 @@ namespace Sygic.Corona.Application.Commands
 
             if (await repository.AlreadyCreatedAsync(profile.DeviceId, cancellationToken))
             {
-                throw new ArgumentException("Profile already created.");
+                throw new DomainException("Profile already created.");
             }
 
             await repository.CreateProfileAsync(profile, cancellationToken);

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -23,7 +23,7 @@ namespace Sygic.Corona.Application.Commands
 
             if (profile == null)
             {
-                throw new ArgumentException("Profile not found.");
+                throw new DomainException("Profile not found.");
             }
 
             foreach (var contactRequest in request.Contacts)
