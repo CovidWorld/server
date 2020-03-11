@@ -1,6 +1,8 @@
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Contracts.Requests;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Profile
 {
@@ -33,9 +36,35 @@ namespace Sygic.Corona.Profile
             var data = JsonConvert.DeserializeObject<CreateProfileRequest>(requestBody);
             
             var command = new CreateProfileCommand(data.DeviceId, data.PushToken, data.Locale, data.Latitude, data.Longitude, data.Accuracy, "");
-            var result = await mediator.Send(command, cancellationToken);
+            try
+            {
+                var result = await mediator.Send(command, cancellationToken);
+                return new OkObjectResult(result);
+            }
+            catch (DomainException ex)
+            {
+                var problemDetails = new ValidationProblemDetails()
+                {
+                    Instance = "CreateDeviceProfile",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = "Please refer to the errors property for additional details."
+                };
 
-            return new OkObjectResult(result);
+                if (ex.InnerException is ValidationException validationException)
+                {
+                    var propertyErrors = validationException.Errors.GroupBy(x => x.PropertyName);
+
+                    foreach (var propertyError in propertyErrors)
+                    {
+                        problemDetails.Errors.Add(propertyError.Key, propertyError.Select(x => x.ErrorMessage).ToArray());
+                    }
+                }
+                else
+                {
+                    problemDetails.Errors.Add("DomainValidations", new[] { ex.Message });
+                }
+                return new BadRequestObjectResult(problemDetails);
+            }
         }
     }
 }
