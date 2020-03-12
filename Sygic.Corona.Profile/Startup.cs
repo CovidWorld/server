@@ -11,6 +11,7 @@ using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
+using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Profile;
 
 [assembly: FunctionsStartup(typeof(Startup))]
@@ -30,6 +31,12 @@ namespace Sygic.Corona.Profile
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
             builder.Services.AddScoped<IRepository, CoronaRepository>();
             builder.Services.AddMediatR(typeof(CreateProfileCommand).GetTypeInfo().Assembly);
+            builder.Services.AddHttpClient<ICloudMessagingService, FirebaseCloudMessagingService>(c =>
+            {
+                c.BaseAddress = new Uri(Environment.GetEnvironmentVariable("FirebaseUrl"));
+                c.DefaultRequestHeaders.Add("Authorization", $"key = {Environment.GetEnvironmentVariable("FirebaseServerKey")}");
+                c.DefaultRequestHeaders.Add("Sender", $"id = {Environment.GetEnvironmentVariable("FirebaseSenderId")}");
+            });
         }
     }
 }
