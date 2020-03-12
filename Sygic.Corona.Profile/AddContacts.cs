@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,10 +33,18 @@ namespace Sygic.Corona.Profile
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<CreateContactsRequest>(requestBody);
 
-            var command = new AddContactsCommand(data.SourceDeviceId, data.SourceProfileId, data.Connections);
-            var result = await mediator.Send(command, cancellationToken);
+            try
+            {
+                var command = new AddContactsCommand(data.SourceDeviceId, data.SourceProfileId, data.Connections);
+                var result = await mediator.Send(command, cancellationToken);
+                return new OkResult();
 
-            return new OkResult();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
