@@ -45,5 +45,12 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
             return profile != null;
         }
+
+        public async Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        {
+            var result = await context.Profiles.Select(x => new {x.Id, x.DeviceId, x.PushToken})
+                .SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);
+            return result.PushToken;
+        }
     }
 }
