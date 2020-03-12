@@ -36,5 +36,10 @@ namespace Sygic.Corona.Domain
             var contact = new Contact(Id, DeviceId, seenProfileId, timestamp, duration, location);
             contacts.Add(contact);
         }
+
+        public void ConfirmInfection()
+        {
+            ConfirmedInfection = true;
+        }
     }
 }
