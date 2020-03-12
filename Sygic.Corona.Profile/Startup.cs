@@ -12,6 +12,7 @@ using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
+using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Profile;
 
 [assembly: FunctionsStartup(typeof(Startup))]
@@ -38,6 +39,9 @@ namespace Sygic.Corona.Profile
                 c.DefaultRequestHeaders.Add("Authorization", $"key = {Environment.GetEnvironmentVariable("FirebaseServerKey")}");
                 c.DefaultRequestHeaders.Add("Sender", $"id = {Environment.GetEnvironmentVariable("FirebaseSenderId")}");
             });
+            builder.Services.AddSingleton<ISmsMessagingService, SmsMessagingService>(x => new SmsMessagingService(
+                Environment.GetEnvironmentVariable("TwilioAccountSid"),
+                Environment.GetEnvironmentVariable("TwilioAuthToken")));
         }
     }
 }

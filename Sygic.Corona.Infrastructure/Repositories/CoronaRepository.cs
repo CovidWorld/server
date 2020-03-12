@@ -52,5 +52,14 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);
             return result.PushToken;
         }
+
+        public async Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        {
+            var result = await context.Profiles.Where(x => x.Id == profileId && x.DeviceId == deviceId)
+                .Select(x => new { x.AuthToken })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return result.AuthToken;
+        }
     }
 }

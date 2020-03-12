@@ -13,5 +13,6 @@ namespace Sygic.Corona.Domain
         Task<uint> GetLastIdAsync(CancellationToken cancellationToken);
         Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken);
         Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
     }
 }
