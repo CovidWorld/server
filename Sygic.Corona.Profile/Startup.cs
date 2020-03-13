@@ -13,6 +13,7 @@ using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
+using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 using Sygic.Corona.Profile;
 
 [assembly: FunctionsStartup(typeof(Startup))]
@@ -43,6 +44,7 @@ namespace Sygic.Corona.Profile
                 Environment.GetEnvironmentVariable("TwilioAccountSid"),
                 Environment.GetEnvironmentVariable("TwilioAuthToken"),
                 Environment.GetEnvironmentVariable("TwilioPhoneNumber")));
+            builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(Environment.GetEnvironmentVariable("MfaTokenGeneratorSecret")));
         }
     }
 }

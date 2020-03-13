@@ -15,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Otp.NET" Version="1.2.2" />
     <PackageReference Include="Twilio" Version="5.37.6" />
   </ItemGroup>
 
