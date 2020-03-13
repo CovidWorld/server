@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,15 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return result.PushToken;
         }
 
+        public async Task<string> GetProfilePushTokenAsync(uint profileId, CancellationToken cancellationToken)
+        {
+            var result = await context.Profiles.Where(x => x.Id == profileId)
+                .Select(x => new { x.PushToken })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return result.PushToken;
+        }
+
         public async Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
         {
             var result = await context.Profiles.Where(x => x.Id == profileId && x.DeviceId == deviceId)
@@ -60,6 +70,12 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .FirstOrDefaultAsync(cancellationToken);
 
             return result.AuthToken;
+        }
+
+        public async Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken)
+        {
+            return await context.Contacts.Where(x => x.SeenProfileId == profileId)
+                .ToListAsync(cancellationToken);
         }
     }
 }

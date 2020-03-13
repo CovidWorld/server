@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Sygic.Corona.Domain.Common;
 
@@ -13,6 +14,8 @@ namespace Sygic.Corona.Domain
         Task<uint> GetLastIdAsync(CancellationToken cancellationToken);
         Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken);
         Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<string> GetProfilePushTokenAsync(uint profileId, CancellationToken cancellationToken);
         Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken);
     }
 }
