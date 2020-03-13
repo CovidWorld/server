@@ -19,17 +19,17 @@ namespace Sygic.Corona.Profile
             this.mediator = mediator;
         }
 
-        [FunctionName("NotificationSender")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log, CancellationToken cancellationToken)
-        {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-            var data = new { test = 2 };
-            var command = new SendPushNotificationCommand("testDeviceId3", 4, data);
-            var result = await mediator.Send(command, cancellationToken);
+        //[FunctionName("NotificationSender")]
+        //public async Task<IActionResult> Run(
+        //    [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+        //    ILogger log, CancellationToken cancellationToken)
+        //{
+        //    log.LogInformation("C# HTTP trigger function processed a request.");
+        //    var data = new { test = 2 };
+        //    var command = new SendPushNotificationCommand("testDeviceId3", 4, data);
+        //    var result = await mediator.Send(command, cancellationToken);
 
-            return new OkObjectResult(result);
-        }
+        //    return new OkObjectResult(result);
+        //}
     }
 }
