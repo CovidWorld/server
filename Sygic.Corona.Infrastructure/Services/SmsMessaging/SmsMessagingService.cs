@@ -9,11 +9,13 @@ namespace Sygic.Corona.Infrastructure.Services.SmsMessaging
     {
         private readonly string accountSid;
         private readonly string authToken;
+        private readonly string senderPhoneNumber;
 
-        public SmsMessagingService(string accountSid, string authToken)
+        public SmsMessagingService(string accountSid, string authToken, string senderPhoneNumber)
         {
             this.accountSid = accountSid;
             this.authToken = authToken;
+            this.senderPhoneNumber = senderPhoneNumber;
         }
         public async Task SendMessageAsync(string messageText, string phoneNumber, CancellationToken cancellationToken)
         {
@@ -21,7 +23,7 @@ namespace Sygic.Corona.Infrastructure.Services.SmsMessaging
 
             var message = await MessageResource.CreateAsync(
                 body: messageText,
-                from: new Twilio.Types.PhoneNumber("TODO"),
+                from: new Twilio.Types.PhoneNumber(senderPhoneNumber),
                 to: new Twilio.Types.PhoneNumber(phoneNumber)
             );
         }

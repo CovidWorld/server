@@ -41,7 +41,8 @@ namespace Sygic.Corona.Profile
             });
             builder.Services.AddSingleton<ISmsMessagingService, SmsMessagingService>(x => new SmsMessagingService(
                 Environment.GetEnvironmentVariable("TwilioAccountSid"),
-                Environment.GetEnvironmentVariable("TwilioAuthToken")));
+                Environment.GetEnvironmentVariable("TwilioAuthToken"),
+                Environment.GetEnvironmentVariable("TwilioPhoneNumber")));
         }
     }
 }
