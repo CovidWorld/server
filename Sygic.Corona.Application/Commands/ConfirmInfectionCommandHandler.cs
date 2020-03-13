@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Domain;
 
 namespace Sygic.Corona.Application.Commands
@@ -8,10 +10,12 @@ namespace Sygic.Corona.Application.Commands
     public class ConfirmInfectionCommandHandler : AsyncRequestHandler<ConfirmInfectionCommand>
     {
         private readonly IRepository repository;
+        private readonly IMediator mediator;
 
-        public ConfirmInfectionCommandHandler(IRepository repository)
+        public ConfirmInfectionCommandHandler(IRepository repository, IMediator mediator)
         {
             this.repository = repository;
+            this.mediator = mediator;
         }
         protected override async Task Handle(ConfirmInfectionCommand request, CancellationToken cancellationToken)
         {
@@ -19,8 +23,22 @@ namespace Sygic.Corona.Application.Commands
 
             if (profile.AuthToken == request.MfaToken)
             {
-                profile.ConfirmInfection();
-                await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                if (profile.ConfirmedInfection == false)
+                {
+                    profile.ConfirmInfection();
+                    await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+                    var query = new GetContactsQuery(profile.DeviceId, profile.Id);
+                    var result = await mediator.Send(query, cancellationToken);
+                    var groupedContacts = result.Contacts.GroupBy(x => x.ProfileId);
+                    foreach (var contact in groupedContacts)
+                    {
+                        var firstContactFromGroup = contact.First();
+                        var data = new { messageType = "CORONA_INFECTION_CONFIRMED" };
+                        var command = new SendPushNotificationCommand(firstContactFromGroup.ProfileId, data);
+                        await mediator.Send(command, cancellationToken);
+                    }
+                }
             }
         }
     }

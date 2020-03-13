@@ -42,8 +42,8 @@ namespace Sygic.Corona.Profile
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                log.LogWarning(e.Message);
+                return new BadRequestResult();
             }
         }
     }

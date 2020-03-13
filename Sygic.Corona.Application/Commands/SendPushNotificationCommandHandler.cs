@@ -19,7 +19,7 @@ namespace Sygic.Corona.Application.Commands
 
         protected override async Task Handle(SendPushNotificationCommand request, CancellationToken cancellationToken)
         {
-            string token = await repository.GetProfilePushTokenAsync(request.ProfileId, request.DeviceId, cancellationToken);
+            string token = await repository.GetProfilePushTokenAsync(request.ProfileId, cancellationToken);
             var result = messagingService.SendMessageToDevice(token, request.Message, cancellationToken);
         }
     }

@@ -17,8 +17,6 @@ namespace Sygic.Corona.Application.Commands
 
         protected override async Task Handle(AddContactsCommand request, CancellationToken cancellationToken)
         {
-            //var sendToProfiles = await _ctx.Contacts.Where(x => x.SeenDeviceId == "testDeviceId2")
-            //    .ToListAsync(cancellationToken);
             var profile = await repository.GetProfileAsync(request.SourceProfileId, request.SourceDeviceId, cancellationToken);
 
             if (profile == null)
