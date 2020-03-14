@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,16 +10,20 @@ using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Contracts.Requests;
 using MediatR;
+using Sygic.Corona.Application.Validations;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Profile
 {
     public class AddContacts
     {
         private readonly IMediator mediator;
+        private readonly ValidationProcessor validation;
 
-        public AddContacts(IMediator mediator)
+        public AddContacts(IMediator mediator, ValidationProcessor validation)
         {
             this.mediator = mediator;
+            this.validation = validation;
         }
 
         [FunctionName("AddContacts")]
@@ -40,10 +43,10 @@ namespace Sygic.Corona.Profile
                 return new OkResult();
 
             }
-            catch (Exception e)
+            catch (DomainException ex)
             {
-                log.LogWarning(e.Message);
-                return new BadRequestResult();
+                var errors = validation.ProcessErrors(ex);
+                return new BadRequestObjectResult(errors);
             }
         }
     }
