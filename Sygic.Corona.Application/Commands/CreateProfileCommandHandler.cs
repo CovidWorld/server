@@ -37,7 +37,7 @@ namespace Sygic.Corona.Application.Commands
             string token = tokenGenerator.Generate();
 
             var location = new Location(request.Latitude, request.Longitude, request.Accuracy);
-            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale, location, token);
+            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale, location, token, request.PhoneNumber);
 
             await repository.CreateProfileAsync(profile, cancellationToken);
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
