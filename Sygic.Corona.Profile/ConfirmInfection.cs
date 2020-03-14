@@ -9,17 +9,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
+using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Contracts.Requests;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Profile
 {
     public class ConfirmInfection
     {
         private readonly IMediator mediator;
+        private readonly ValidationProcessor validation;
 
-        public ConfirmInfection(IMediator mediator)
+        public ConfirmInfection(IMediator mediator, ValidationProcessor validation)
         {
             this.mediator = mediator;
+            this.validation = validation;
         }
 
         [FunctionName("ConfirmInfection")]
@@ -27,15 +31,21 @@ namespace Sygic.Corona.Profile
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var data = JsonConvert.DeserializeObject<ConfirmInfectionRequest>(requestBody);
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<ConfirmInfectionRequest>(requestBody);
-            
-            var command = new ConfirmInfectionCommand(data.DeviceId, data.ProfileId, data.MfaToken);
-            await mediator.Send(command, cancellationToken);
+                var command = new ConfirmInfectionCommand(data.DeviceId, data.ProfileId, data.MfaToken);
+                await mediator.Send(command, cancellationToken);
 
-            return new OkResult();
+                return new OkResult();
+            }
+            catch (DomainException ex)
+            {
+                var errors = validation.ProcessErrors(ex);
+                return new BadRequestObjectResult(errors);
+            }
         }
     }
 }

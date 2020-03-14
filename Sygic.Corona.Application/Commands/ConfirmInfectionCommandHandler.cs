@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -21,6 +22,14 @@ namespace Sygic.Corona.Application.Commands
         {
             var profile = await repository.GetProfileAsync(request.ProfileId, request.DeviceId, cancellationToken);
 
+            if (profile == null)
+            {
+                throw new DomainException("Profile not found.");
+            }
+            if (profile.AuthToken != request.MfaToken)
+            {
+                throw new DomainException("Wrong maf token.");
+            }
             if (profile.AuthToken == request.MfaToken)
             {
                 if (profile.ConfirmedInfection == false)

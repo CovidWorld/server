@@ -7,16 +7,20 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Sygic.Corona.Application.Queries;
+using Sygic.Corona.Application.Validations;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Profile
 {
     public class GetInfectionStatus
     {
         private readonly IMediator mediator;
+        private readonly ValidationProcessor validation;
 
-        public GetInfectionStatus(IMediator mediator)
+        public GetInfectionStatus(IMediator mediator, ValidationProcessor validation)
         {
             this.mediator = mediator;
+            this.validation = validation;
         }
 
         [FunctionName("GetInfectionStatus")]
@@ -24,17 +28,26 @@ namespace Sygic.Corona.Profile
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
-            bool convertSuccess = uint.TryParse(req.Query["profileId"], out uint profileId);
-            string deviceId = req.Query["deviceId"];
-
-            if (convertSuccess == false)
+            try
             {
-                return new BadRequestObjectResult("ProfileId is in wrong format.");
-            }
+                bool convertSuccess = uint.TryParse(req.Query["profileId"], out uint profileId);
+                string deviceId = req.Query["deviceId"];
 
-            var query = new GetInfectionStatusQuery(profileId, deviceId);
-            var result = await mediator.Send(query, cancellationToken);
-            return new OkObjectResult(result);
+                if (convertSuccess == false)
+                {
+                    throw new DomainException("ProfileId is in wrong format.");
+                }
+
+                var query = new GetInfectionStatusQuery(profileId, deviceId);
+                var result = await mediator.Send(query, cancellationToken);
+                return new OkObjectResult(result);
+            }
+            catch (DomainException ex)
+            {
+                var errors = validation.ProcessErrors(ex);
+                return new BadRequestObjectResult(errors);
+            }
+            
         }
     }
 }
