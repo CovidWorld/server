@@ -77,6 +77,14 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return result.AuthToken;
         }
 
+        public async Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        {
+            bool status = await context.Profiles.Where(x => x.Id == profileId && x.DeviceId == deviceId)
+                .Select(x => x.ConfirmedInfection).SingleOrDefaultAsync(cancellationToken);
+
+            return status;
+        }
+
         public async Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken)
         {
             return await context.Contacts.Where(x => x.SeenProfileId == profileId)

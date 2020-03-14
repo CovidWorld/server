@@ -17,6 +17,7 @@ namespace Sygic.Corona.Domain
         Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<string> GetProfilePushTokenAsync(uint profileId, CancellationToken cancellationToken);
         Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken);
     }
 }
