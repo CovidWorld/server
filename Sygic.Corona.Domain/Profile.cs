@@ -16,6 +16,7 @@ namespace Sygic.Corona.Domain
         public bool IsInQuarantine { get; private set; }
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
+        public DateTime? LastPositionReportTime { get; private set; }
 
         private readonly List<Contact> contacts;
         public IReadOnlyCollection<Contact> Contacts => contacts;
@@ -58,6 +59,12 @@ namespace Sygic.Corona.Domain
             IsInQuarantine = true;
             QuarantineBeginning = DateTime.UtcNow;
             QuarantineEnd = QuarantineBeginning.Value.Add(duration);
+        }
+
+        public void ReportPosition(Location location)
+        {
+            LastPositionReportTime = DateTime.UtcNow;
+            Location = location;
         }
     }
 }

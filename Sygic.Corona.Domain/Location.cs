@@ -12,5 +12,12 @@
             Longitude = longitude;
             Accuracy = accuracy;
         }
+
+        public Location(double latitude, double longitude, int accuracy)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+            Accuracy = accuracy;
+        }
     }
 }
