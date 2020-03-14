@@ -20,13 +20,13 @@ namespace Sygic.Corona.Application.Commands
         }
         public async Task<SendMfaTokenResponse> Handle(SendMfaTokenCommand request, CancellationToken cancellationToken)
         {
-            string token = await repository.GetProfileMfaTokenAsync(request.ProfileId, request.DeviceId, cancellationToken);
+            var profile = await repository.GetProfileAsync(request.ProfileId, request.DeviceId, cancellationToken);
 
-            if (token == null)
+            if (profile == null)
             {
                 throw new DomainException("Profile not found.");
             }
-            await messagingService.SendMessageAsync(token, request.PhoneNumber, cancellationToken);
+            await messagingService.SendMessageAsync(profile.AuthToken, profile.PhoneNumber, cancellationToken);
 
             return new SendMfaTokenResponse();
         }

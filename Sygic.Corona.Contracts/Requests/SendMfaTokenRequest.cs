@@ -4,6 +4,5 @@
     {
         public string DeviceId { get; set; }
         public uint ProfileId { get; set; }
-        public string PhoneNumber { get; set; }
     }
 }
