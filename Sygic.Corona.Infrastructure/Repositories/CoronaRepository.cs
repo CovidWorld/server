@@ -33,6 +33,11 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return context.Profiles.SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);
         }
 
+        public Task<Profile> GetProfileAsync(string deviceId, CancellationToken cancellationToken)
+        {
+            return context.Profiles.SingleOrDefaultAsync(x => x.DeviceId == deviceId, cancellationToken);
+        }
+
         public async Task<uint> GetLastIdAsync(CancellationToken cancellationToken)
         {
             return await context.Profiles.OrderByDescending(x => x.Id)

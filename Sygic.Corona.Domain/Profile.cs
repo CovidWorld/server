@@ -41,5 +41,10 @@ namespace Sygic.Corona.Domain
         {
             ConfirmedInfection = true;
         }
+
+        public void UpdatePushToken(string pushToken)
+        {
+            PushToken = pushToken;
+        }
     }
 }

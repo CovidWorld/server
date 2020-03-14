@@ -11,7 +11,7 @@ namespace Sygic.Corona.Infrastructure.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.DeviceId).IsRequired();
             builder.Property(x => x.Locale).IsRequired();
-            builder.Property(x => x.PushToken).IsRequired();
+            builder.Property(x => x.PushToken).IsRequired(false);
             builder.OwnsOne(x => x.Location, n => { n.WithOwner(); });
             
             var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));

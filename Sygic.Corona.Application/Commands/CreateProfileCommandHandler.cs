@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
-using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 
 namespace Sygic.Corona.Application.Commands
@@ -20,6 +19,18 @@ namespace Sygic.Corona.Application.Commands
         }
         public async Task<CreateProfileResponse> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
         {
+            var existingProfile = await repository.GetProfileAsync(request.DeviceId, cancellationToken);
+            if (existingProfile != null)
+            {
+                if (existingProfile.PushToken != request.PushToken)
+                {
+                    existingProfile.UpdatePushToken(request.PushToken);
+                    await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                }
+
+                return new CreateProfileResponse { ProfileId = existingProfile.Id, DeviceId = existingProfile.DeviceId };
+            }
+
             uint lastId = await repository.GetLastIdAsync(cancellationToken);
             uint nextId = lastId + 1;
 
@@ -28,15 +39,10 @@ namespace Sygic.Corona.Application.Commands
             var location = new Location(request.Latitude, request.Longitude, request.Accuracy);
             var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale, location, token);
 
-            if (await repository.AlreadyCreatedAsync(profile.DeviceId, cancellationToken))
-            {
-                throw new DomainException("Profile already created.");
-            }
-
             await repository.CreateProfileAsync(profile, cancellationToken);
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-            return new CreateProfileResponse{ Id = nextId };
+            return new CreateProfileResponse{ ProfileId = profile.Id, DeviceId = profile.DeviceId };
 
         }
     }
