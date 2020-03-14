@@ -29,8 +29,8 @@ namespace Sygic.Corona.Profile
                 Environment.GetEnvironmentVariable("CosmosAuthKey"),
                 Environment.GetEnvironmentVariable("CosmosDatabase")));
             
-            builder.Services.AddTransient(typeof(IValidator), typeof(CreateProfileCommandValidator));
-            builder.Services.AddTransient(typeof(IValidator), typeof(AddContactsCommandValidator));
+            builder.Services.AddTransient(typeof(IValidator<CreateProfileCommand>), typeof(CreateProfileCommandValidator));
+            //builder.Services.AddTransient(typeof(IValidator), typeof(AddContactsCommandValidator));
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
             builder.Services.AddScoped<IRepository, CoronaRepository>();
             builder.Services.AddMediatR(typeof(CreateProfileCommand).GetTypeInfo().Assembly);
