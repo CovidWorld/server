@@ -14,6 +14,7 @@ namespace Sygic.Corona.Infrastructure.Configurations
             //builder.Property(x => x.PhoneNumber).IsRequired();
             builder.Property(x => x.PushToken).IsRequired(false);
             //builder.OwnsOne(x => x.Location, n => { n.WithOwner(); });
+            builder.OwnsOne(x => x.AreaExit, n => { n.WithOwner(); });
 
             var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);

@@ -11,6 +11,7 @@ namespace Sygic.Corona.Domain
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
         //public Location Location { get; private set; }
+        public AreaExit AreaExit { get; private set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
         public bool IsInQuarantine { get; private set; }
@@ -63,6 +64,11 @@ namespace Sygic.Corona.Domain
         public void ConfirmInfection()
         {
             ConfirmedInfection = true;
+        }
+
+        public void AddAreaExit(AreaExit exit)
+        {
+            AreaExit = exit;
         }
 
         public void UpdatePushToken(string pushToken)
