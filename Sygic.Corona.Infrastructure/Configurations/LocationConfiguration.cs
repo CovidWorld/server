@@ -4,9 +4,9 @@ using Sygic.Corona.Domain;
 
 namespace Sygic.Corona.Infrastructure.Configurations
 {
-    public class ContactConfiguration : IEntityTypeConfiguration<Contact>
+    public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
-        public void Configure(EntityTypeBuilder<Contact> builder)
+        public void Configure(EntityTypeBuilder<Location> builder)
         {
             builder.HasKey(x => x.Id);
         }

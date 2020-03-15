@@ -28,6 +28,11 @@ namespace Sygic.Corona.Infrastructure.Repositories
             await context.Contacts.AddAsync(contact, cancellationToken);
         }
 
+        public async Task CreateLocationAsync(Location location, CancellationToken cancellationToken)
+        {
+            await context.Locations.AddAsync(location, cancellationToken);
+        }
+
         public Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
         {
             return context.Profiles.SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);

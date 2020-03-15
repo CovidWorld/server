@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
+using Sygic.Corona.Contracts.Requests;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -6,17 +8,18 @@ namespace Sygic.Corona.Application.Commands
     {
         public uint ProfileId { get; }
         public string DeviceId { get; }
-        public double Latitude { get; }
-        public double Longitude { get; }
-        public int Accuracy { get; }
+        private readonly List<LocationRequest> locations;
+        public List<LocationRequest> Locations => locations;
 
-        public ReportLocationCommand(uint profileId, string deviceId, double latitude, double longitude, int accuracy)
+        protected ReportLocationCommand()
+        {
+            locations = new List<LocationRequest>();
+        }
+        public ReportLocationCommand(uint profileId, string deviceId, IEnumerable<LocationRequest> locations) : this()
         {
             ProfileId = profileId;
             DeviceId = deviceId;
-            Latitude = latitude;
-            Longitude = longitude;
-            Accuracy = accuracy;
+            Locations.AddRange(locations);
         }
     }
 }

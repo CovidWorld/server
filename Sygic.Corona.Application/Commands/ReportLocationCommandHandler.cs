@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
@@ -23,9 +24,15 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
 
-            var location = new Location(request.Latitude, request.Longitude, request.Accuracy);
-            profile.ReportPosition(location);
+            var locations = request.Locations.Select(x =>
+                new Location(request.ProfileId, x.Latitude, x.Longitude, x.Accuracy, x.RecordDateUtc)).ToList();
+            profile.AddLocations(locations);
 
+            //foreach (var location in locations)
+            //{
+            //    await repository.CreateLocationAsync(location, cancellationToken);
+            //}
+            
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

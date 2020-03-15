@@ -10,6 +10,7 @@ namespace Sygic.Corona.Domain
         IUnitOfWork UnitOfWork { get; }
         Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken);
         Task CreateContactAsync(Contact contact, CancellationToken cancellationToken);
+        Task CreateLocationAsync(Location location, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(string deviceId, CancellationToken cancellationToken);
         Task<uint> GetLastIdAsync(CancellationToken cancellationToken);

@@ -10,7 +10,7 @@ namespace Sygic.Corona.Domain
         public string PhoneNumber { get; private set; }
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
-        public Location Location { get; private set; }
+        //public Location Location { get; private set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
         public bool IsInQuarantine { get; private set; }
@@ -21,27 +21,43 @@ namespace Sygic.Corona.Domain
         private readonly List<Contact> contacts;
         public IReadOnlyCollection<Contact> Contacts => contacts;
 
+        private readonly List<Location> locations;
+        public IReadOnlyCollection<Location> Locations => locations;
+
         public Profile()
         {
             contacts = new List<Contact>();
+            locations = new List<Location>();
         }
-        public Profile(uint id, string deviceId, string pushToken, string locale, Location location, string authToken, string phoneNumber)
+        public Profile(uint id, string deviceId, string pushToken, string locale, Location location, string authToken, string phoneNumber) : this()
         {
             Id = id;
             DeviceId = deviceId;
             PushToken = pushToken;
             Locale = locale;
-            Location = location;
+            //Location = location;
             AuthToken = authToken;
             ConfirmedInfection = false;
             IsInQuarantine = false;
             PhoneNumber = phoneNumber;
         }
 
-        public void AddContact(uint seenProfileId, int timestamp, TimeSpan duration, Location location)
+        public void AddContact(uint seenProfileId, int timestamp, TimeSpan duration, double? latitude, double? longitude, int? accuracy)
         {
-            var contact = new Contact(Id, DeviceId, seenProfileId, timestamp, duration, location);
+            var contact = new Contact(Id, DeviceId, seenProfileId, timestamp, duration, latitude, longitude, accuracy);
             contacts.Add(contact);
+        }
+
+        public void AddLocation(Location location)
+        {
+            locations.Add(location);
+            LastPositionReportTime = DateTime.UtcNow;
+        }
+
+        public void AddLocations(IEnumerable<Location> locationsList)
+        {
+            locations.AddRange(locationsList);
+            LastPositionReportTime = DateTime.UtcNow;
         }
 
         public void ConfirmInfection()
@@ -64,7 +80,7 @@ namespace Sygic.Corona.Domain
         public void ReportPosition(Location location)
         {
             LastPositionReportTime = DateTime.UtcNow;
-            Location = location;
+            //Location = location;
         }
     }
 }

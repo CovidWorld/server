@@ -26,9 +26,8 @@ namespace Sygic.Corona.Application.Commands
 
             foreach (var contactRequest in request.Contacts)
             {
-                var location = new Location(contactRequest.Latitude, contactRequest.Longitude, contactRequest.Accuracy);
                 var contact = new Contact(profile.Id, profile.DeviceId, contactRequest.SeenProfileId,
-                    contactRequest.Timestamp, contactRequest.Duration, location);
+                    contactRequest.Timestamp, contactRequest.Duration, contactRequest.Latitude, contactRequest.Longitude, contactRequest.Accuracy);
 
                 //profile.AddContact(contact.SeenDeviceId, contact.Timestamp, contact.Duration, contact.Location);
                 await repository.CreateContactAsync(contact, cancellationToken);

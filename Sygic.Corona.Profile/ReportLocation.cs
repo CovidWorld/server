@@ -35,7 +35,7 @@ namespace Sygic.Corona.Profile
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<ReportLocationRequest>(requestBody);
-                var command = new ReportLocationCommand(data.ProfileId, data.DeviceId, data.Latitude, data.Longitude, data.Accuracy);
+                var command = new ReportLocationCommand(data.ProfileId, data.DeviceId, data.Locations);
 
                 await mediator.Send(command, cancellationToken);
                 return new OkResult();
