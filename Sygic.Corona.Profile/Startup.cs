@@ -5,12 +5,14 @@ using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Sygic.Corona.Application.Behaviors;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
+using Sygic.Corona.Infrastructure.Services.Authorization;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
@@ -41,6 +43,19 @@ namespace Sygic.Corona.Profile
                 c.DefaultRequestHeaders.Add("Authorization", $"key = {Environment.GetEnvironmentVariable("FirebaseServerKey")}");
                 c.DefaultRequestHeaders.Add("Sender", $"id = {Environment.GetEnvironmentVariable("FirebaseSenderId")}");
             });
+            builder.Services.AddSingleton(x => new TokenValidationParameters
+            {
+                ValidAudience = Environment.GetEnvironmentVariable("FirebaseProjectId"),
+                ValidIssuer = $"https://securetoken.google.com/{Environment.GetEnvironmentVariable("FirebaseProjectId")}",
+                ValidateIssuerSigningKey = true,
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateLifetime = true
+            });
+            builder.Services.AddHttpClient<IAuthService, FirebaseAuthService>(c =>
+                {
+                    c.BaseAddress = new Uri("https://www.googleapis.com/robot/v1/metadata/");
+                });
             builder.Services.AddSingleton<ISmsMessagingService, SmsMessagingService>(x => new SmsMessagingService(
                 Environment.GetEnvironmentVariable("TwilioAccountSid"),
                 Environment.GetEnvironmentVariable("TwilioAuthToken"),
