@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
 
@@ -94,6 +95,37 @@ namespace Sygic.Corona.Infrastructure.Repositories
         {
             return await context.Contacts.Where(x => x.SeenProfileId == profileId)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
+        {
+            var profiles = await context.Profiles.Where(x => x.IsInQuarantine)
+                .Select(x => new {x.Id, x.DeviceId, x.PhoneNumber, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd})
+                .ToListAsync(cancellationToken);
+            var response = profiles.Select(x => new GetQuarantineListResponse
+            {
+                Id = x.Id,
+                DeviceId = x.DeviceId,
+                PhoneNumber = x.PhoneNumber,
+                QuarantineBeginning = x.QuarantineBeginning,
+                QuarantineEnd = x.QuarantineEnd,
+                LastPositionReportTime = x.LastPositionReportTime
+            }).ToList();
+
+            var ids = response.Select(x => x.Id).ToList();
+            foreach (uint id in ids)
+            {
+                var lastLocation = await context.Locations.Where(x => x.ProfileId == id)
+                    .Select(x => new {x.Latitude, x.Longitude, x.Accuracy, x.CreatedOn})
+                    .OrderByDescending(x => x.CreatedOn)
+                    .FirstOrDefaultAsync(cancellationToken);
+                var profile = response.Single(x => x.Id == id);
+                profile.Latitude = lastLocation.Latitude;
+                profile.Longitude = lastLocation.Longitude;
+                profile.Accuracy = lastLocation.Accuracy;
+            }
+            
+            return response;
         }
     }
 }

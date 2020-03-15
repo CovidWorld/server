@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sygic.Corona.Contracts\Sygic.Corona.Contracts.csproj" />
     <ProjectReference Include="..\Sygic.Corona.Domain\Sygic.Corona.Domain.csproj" />
   </ItemGroup>
 
