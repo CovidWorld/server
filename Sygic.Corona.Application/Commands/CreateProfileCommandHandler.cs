@@ -25,8 +25,13 @@ namespace Sygic.Corona.Application.Commands
                 if (existingProfile.PushToken != request.PushToken)
                 {
                     existingProfile.UpdatePushToken(request.PushToken);
-                    await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
                 }
+
+                if (existingProfile.PhoneNumber != request.PhoneNumber)
+                {
+                    existingProfile.UpdatePhoneNumber(request.PhoneNumber);
+                }
+                await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                 return new CreateProfileResponse { ProfileId = existingProfile.Id, DeviceId = existingProfile.DeviceId };
             }

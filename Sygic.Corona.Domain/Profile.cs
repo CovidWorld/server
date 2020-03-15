@@ -70,6 +70,11 @@ namespace Sygic.Corona.Domain
             PushToken = pushToken;
         }
 
+        public void UpdatePhoneNumber(string phoneNumber)
+        {
+            PhoneNumber = phoneNumber;
+        }
+
         public void BeginQuarantine(TimeSpan duration)
         {
             IsInQuarantine = true;
