@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -10,16 +9,16 @@ namespace Sygic.Corona.Application.Commands
         public double Latitude { get; }
         public double Longitude { get; }
         public int Accuracy { get; }
-        public DateTime RecordDateUtc { get; }
+        public int RecordTimestamp { get; }
 
-        public NotifyAreaExitCommand(uint profileId, string deviceId, double latitude, double longitude, int accuracy, DateTime recordDateUtc)
+        public NotifyAreaExitCommand(uint profileId, string deviceId, double latitude, double longitude, int accuracy, int recordTimestamp)
         {
             ProfileId = profileId;
             DeviceId = deviceId;
             Latitude = latitude;
             Longitude = longitude;
             Accuracy = accuracy;
-            RecordDateUtc = recordDateUtc;
+            RecordTimestamp = recordTimestamp;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Sygic.Corona.Profile
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<NotifyAreaExitRequest>(requestBody);
-                var command = new NotifyAreaExitCommand(data.ProfileId, data.DeviceId, data.Latitude, data.Longitude, data.Accuracy, data.RecordDateUtc);
+                var command = new NotifyAreaExitCommand(data.ProfileId, data.DeviceId, data.Latitude, data.Longitude, data.Accuracy, data.RecordTimestamp);
                 await mediator.Send(command, cancellationToken);
                 return new OkResult();
             }

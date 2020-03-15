@@ -4,16 +4,19 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
+using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 
 namespace Sygic.Corona.Application.Commands
 {
     public class ReportLocationCommandHandler : AsyncRequestHandler<ReportLocationCommand>
     {
         private readonly IRepository repository;
+        private readonly IDateTimeConvertService timeConvertService;
 
-        public ReportLocationCommandHandler(IRepository repository)
+        public ReportLocationCommandHandler(IRepository repository, IDateTimeConvertService timeConvertService)
         {
             this.repository = repository;
+            this.timeConvertService = timeConvertService;
         }
 
         protected override async Task Handle(ReportLocationCommand request, CancellationToken cancellationToken)
@@ -24,8 +27,12 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
 
+            
             var locations = request.Locations.Select(x =>
-                new Location(request.ProfileId, x.Latitude, x.Longitude, x.Accuracy, x.RecordDateUtc)).ToList();
+            {
+                var time = timeConvertService.UnixTimeStampToDateTime(x.RecordTimestamp);
+                return new Location(request.ProfileId, x.Latitude, x.Longitude, x.Accuracy, time);
+            }).ToList();
             profile.AddLocations(locations);
 
             //foreach (var location in locations)

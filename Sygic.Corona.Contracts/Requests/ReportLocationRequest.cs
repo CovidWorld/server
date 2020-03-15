@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Sygic.Corona.Contracts.Requests
 {
@@ -16,6 +15,6 @@ namespace Sygic.Corona.Contracts.Requests
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int Accuracy { get; set; }
-        public DateTime RecordDateUtc { get; set; }
+        public int RecordTimestamp { get; set; }
     }
 }

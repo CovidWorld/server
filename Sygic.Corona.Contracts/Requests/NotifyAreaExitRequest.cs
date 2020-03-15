@@ -9,6 +9,6 @@ namespace Sygic.Corona.Contracts.Requests
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int Accuracy { get; set; }
-        public DateTime RecordDateUtc { get; set; }
+        public int RecordTimestamp { get; set; }
     }
 }
