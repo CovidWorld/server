@@ -26,6 +26,11 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
 
+            if (!profile.IsInQuarantine)
+            {
+                throw new DomainException("Profile is not in quarantine.");
+            }
+
             var exit = new AreaExit(request.Latitude, request.Longitude, request.Accuracy, timeConvertService.UnixTimeStampToDateTime(request.RecordTimestamp));
             profile.AddAreaExit(exit);
 
