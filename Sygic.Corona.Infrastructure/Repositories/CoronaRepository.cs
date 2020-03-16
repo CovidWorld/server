@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
@@ -12,13 +13,16 @@ namespace Sygic.Corona.Infrastructure.Repositories
 {
     public class CoronaRepository : IRepository
     {
+        private readonly ILogger<CoronaRepository> log;
         private readonly CoronaContext context;
         public IUnitOfWork UnitOfWork => context;
 
-        public CoronaRepository(CoronaContext context)
+        public CoronaRepository(ILogger<CoronaRepository> log, CoronaContext context)
         {
+            this.log = log;
             this.context = context;
         }
+        
         public async Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken)
         {
             //await context.Database.EnsureCreatedAsync(cancellationToken);
@@ -98,6 +102,63 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<GetDeviceWithLocResponse> GetDeviceWithLocHistoryAsync(
+            uint profileId,
+            string deviceId,
+            CancellationToken ct)
+        {
+            var profiles = await context.Profiles
+                .AsNoTracking()
+                .Where(x => x.DeviceId == deviceId && x.Id == profileId)
+                .Select(x => new
+                {
+                    x.Id, 
+                    x.DeviceId, 
+                    x.PhoneNumber, 
+                    x.QuarantineBeginning, 
+                    x.QuarantineEnd
+                })
+                .ToListAsync(ct);
+
+            if (profiles.Count == 0)
+            {
+                log.LogDebug($"No profile for profile:{profileId}, device:{deviceId}");
+                return null;
+            }
+            
+            if (profiles.Count > 1)
+            {
+                log.LogDebug($"More than one profile:{profileId}, device:{deviceId}, taking the first one.");
+            }
+
+            var profile = profiles.First();
+
+            var locations = await context.Locations
+                .AsNoTracking()
+                .Where(x => x.ProfileId == profile.Id)
+                .OrderByDescending(x => x.CreatedOn)
+                .ToListAsync(ct);
+
+            var resp = new GetDeviceWithLocResponse
+            {
+                Id = profile.Id,
+                DeviceId = profile.DeviceId,
+                PhoneNumber = profile.PhoneNumber,
+                QuarantineBeginning = profile.QuarantineBeginning,
+                QuarantineEnd = profile.QuarantineEnd,
+                Locations = locations.Select(l => new LocationResponse
+                {
+                    Id = l.Id,
+                    Latitude = l.Latitude,
+                    Longitude = l.Longitude,
+                    Accuracy = l.Accuracy,
+                    CreatedOn = l.CreatedOn
+                }).ToList()
+            };
+
+            return resp;
+        }
+        
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;
