@@ -197,6 +197,15 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return response.Select(x => x.Value);
         }
 
+        public async Task<IEnumerable<Profile>> GetRawProfilesInQuarantineAsync(CancellationToken cancellationToken)
+        {
+            var now = DateTime.UtcNow;
+            return await context.Profiles
+                .AsNoTracking()
+                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;
