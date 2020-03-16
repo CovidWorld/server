@@ -14,6 +14,7 @@ namespace Sygic.Corona.Domain
         Task CreateContactAsync(Contact contact, CancellationToken cancellationToken);
         Task CreateLocationAsync(Location location, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
+        Task<Profile> GetProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(string deviceId, CancellationToken cancellationToken);
         Task<uint> GetLastIdAsync(CancellationToken cancellationToken);
         Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken);
@@ -22,9 +23,11 @@ namespace Sygic.Corona.Domain
         Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken);
+        Task<IEnumerable<Contact>> GetContactsForProfileAsyncNt(uint profileId, CancellationToken cancellationToken);
         Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetRawProfilesInQuarantineAsync(CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken);
-        Task<GetDeviceWithLocResponse> GetDeviceWithLocHistoryAsync(uint profileId, string deviceId, CancellationToken ct);
+        Task<IEnumerable<Location>> GetLocationsForProfileNt(uint profileId, CancellationToken ct);
+        Task<Location> GetLastLocationForProfileNt(uint profileId, CancellationToken ct);
     }
 }

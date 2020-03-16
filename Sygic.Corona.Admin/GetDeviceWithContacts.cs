@@ -14,12 +14,12 @@ using Sygic.Corona.Infrastructure.Services.Authorization;
 
 namespace Sygic.Corona.Admin
 {
-    public class GetDeviceWithLocations
+    public class GetDeviceWithContacts
     {
         private readonly IMediator mediator;
         private readonly IAuthService authService;
 
-        public GetDeviceWithLocations(
+        public GetDeviceWithContacts(
             IMediator mediator, 
             IAuthService authService)
         {
@@ -27,7 +27,7 @@ namespace Sygic.Corona.Admin
             this.authService = authService;
         }
 
-        [FunctionName("GetDeviceWithLocations")]
+        [FunctionName("GetDeviceWithContacts")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequestMessage req,
             ILogger log, 
@@ -71,7 +71,7 @@ namespace Sygic.Corona.Admin
                 return new BadRequestErrorMessageResult($"Cannot parse profile id: {profIdS}");   
             }
             
-            var command = new GetDeviceWithLocQuery(profId, devId);
+            var command = new GetDeviceWithContactsQuery(profId, devId);
             var result = await mediator.Send(command, cancellationToken);
 
             if (result == null)

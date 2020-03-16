@@ -7,16 +7,16 @@ using Sygic.Corona.Domain;
 
 namespace Sygic.Corona.Application.Queries
 {
-    public class GetDeviceWithLocQueryHandler : IRequestHandler<GetDeviceWithLocQuery, GetDeviceWithLocResponse>
+    public class GetDeviceWithContactsQueryHandler : IRequestHandler<GetDeviceWithContactsQuery, GetDeviceWithContactsResponse>
     {
         private readonly IRepository repository;
 
-        public GetDeviceWithLocQueryHandler(IRepository repository)
+        public GetDeviceWithContactsQueryHandler(IRepository repository)
         {
             this.repository = repository;
         }
-        public async Task<GetDeviceWithLocResponse> Handle(
-            GetDeviceWithLocQuery q, 
+        public async Task<GetDeviceWithContactsResponse> Handle(
+            GetDeviceWithContactsQuery q, 
             CancellationToken ct)
         {
             var profile = await repository.GetProfileAsyncNt(q.ProfileId, q.DeviceId, ct);
@@ -26,22 +26,23 @@ namespace Sygic.Corona.Application.Queries
                 return null;
             }
             
-            var locations = await repository.GetLocationsForProfileNt(q.ProfileId, ct);
+            var contacts = await repository.GetContactsForProfileAsyncNt(q.ProfileId, ct);
             
-            var resp = new GetDeviceWithLocResponse
+            var resp = new GetDeviceWithContactsResponse
             {
                 Id = profile.Id,
                 DeviceId = profile.DeviceId,
                 PhoneNumber = profile.PhoneNumber,
                 QuarantineBeginning = profile.QuarantineBeginning,
                 QuarantineEnd = profile.QuarantineEnd,
-                Locations = locations.Select(l => new LocationResponse
+                
+                Contacts = contacts.Select(x => new ContactResponse
                 {
-                    Id = l.Id,
-                    Latitude = l.Latitude,
-                    Longitude = l.Longitude,
-                    Accuracy = l.Accuracy,
-                    CreatedOn = l.CreatedOn
+                    ProfileId = x.ProfileId,
+                    SourceDeviceId = x.SourceDeviceId,
+                    SeenProfileId = x.SeenProfileId,
+                    Duration = x.Duration,
+                    Timestamp = x.Timestamp
                 }).ToList()
             };
 
