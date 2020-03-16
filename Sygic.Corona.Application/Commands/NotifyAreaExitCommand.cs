@@ -8,10 +8,10 @@ namespace Sygic.Corona.Application.Commands
         public string DeviceId { get; }
         public double Latitude { get; }
         public double Longitude { get; }
-        public int Accuracy { get; }
+        public double Accuracy { get; }
         public int RecordTimestamp { get; }
 
-        public NotifyAreaExitCommand(uint profileId, string deviceId, double latitude, double longitude, int accuracy, int recordTimestamp)
+        public NotifyAreaExitCommand(uint profileId, string deviceId, double latitude, double longitude, double accuracy, int recordTimestamp)
         {
             ProfileId = profileId;
             DeviceId = deviceId;

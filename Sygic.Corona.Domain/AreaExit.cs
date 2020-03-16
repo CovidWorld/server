@@ -6,10 +6,10 @@ namespace Sygic.Corona.Domain
     {
         public double Latitude { get; private set; }
         public double Longitude { get; private set; }
-        public int Accuracy { get; private set; }
+        public double Accuracy { get; private set; }
         public DateTime RecordDateUtc { get; private set; }
 
-        public AreaExit(double latitude, double longitude, int accuracy, DateTime recordDateUtc)
+        public AreaExit(double latitude, double longitude, double accuracy, DateTime recordDateUtc)
         {
             Latitude = latitude;
             Longitude = longitude;

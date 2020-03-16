@@ -8,28 +8,28 @@ namespace Sygic.Corona.Domain
         public uint ProfileId { get; set; }
         public double? Latitude { get; private set; }
         public double? Longitude { get; private set; }
-        public int? Accuracy { get; private set; }
+        public double? Accuracy { get; private set; }
         public DateTime CreatedOn { get; private set; }
 
         protected Location()
         {
             CreatedOn = DateTime.UtcNow;
         }
-        public Location(double? latitude, double? longitude, int? accuracy) : this()
+        public Location(double? latitude, double? longitude, double? accuracy) : this()
         {
             Latitude = latitude;
             Longitude = longitude;
             Accuracy = accuracy;
         }
 
-        public Location(double latitude, double longitude, int accuracy) : this()
+        public Location(double latitude, double longitude, double accuracy) : this()
         {
             Latitude = latitude;
             Longitude = longitude;
             Accuracy = accuracy;
         }
 
-        public Location(uint profileId, double? latitude, double? longitude, int? accuracy) : this()
+        public Location(uint profileId, double? latitude, double? longitude, double? accuracy) : this()
         {
             ProfileId = profileId;
             Latitude = latitude;
@@ -37,7 +37,7 @@ namespace Sygic.Corona.Domain
             Accuracy = accuracy;
         }
 
-        public Location(uint profileId, double? latitude, double? longitude, int? accuracy, DateTime createdOn)
+        public Location(uint profileId, double? latitude, double? longitude, double? accuracy, DateTime createdOn)
         {
             ProfileId = profileId;
             Latitude = latitude;

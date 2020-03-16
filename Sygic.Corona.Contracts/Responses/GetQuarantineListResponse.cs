@@ -12,6 +12,6 @@ namespace Sygic.Corona.Contracts.Responses
         public DateTime? LastPositionReportTime { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public int? Accuracy { get; set; }
+        public double? Accuracy { get; set; }
     }
 }

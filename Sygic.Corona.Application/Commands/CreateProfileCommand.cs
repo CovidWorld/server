@@ -11,9 +11,9 @@ namespace Sygic.Corona.Application.Commands
         public string Locale { get; }
         public double? Latitude { get; }
         public double? Longitude { get; }
-        public int? Accuracy { get; }
+        public double? Accuracy { get; }
 
-        public CreateProfileCommand(string deviceId, string pushToken, string phoneNumber, string locale, double? latitude, double? longitude, int? accuracy)
+        public CreateProfileCommand(string deviceId, string pushToken, string phoneNumber, string locale, double? latitude, double? longitude, double? accuracy)
         {
             DeviceId = deviceId;
             PushToken = pushToken;
