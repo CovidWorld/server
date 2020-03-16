@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 
 namespace Sygic.Corona.Application.Commands
@@ -11,11 +12,14 @@ namespace Sygic.Corona.Application.Commands
     {
         private readonly ISmsMessagingService messagingService;
         private readonly ILogger<SendNotificationToInactiveProfileCommandHandler> log;
+        private readonly IRepository repository;
 
-        public SendNotificationToInactiveProfileCommandHandler(ISmsMessagingService messagingService, ILogger<SendNotificationToInactiveProfileCommandHandler> log)
+        public SendNotificationToInactiveProfileCommandHandler(ISmsMessagingService messagingService,
+            ILogger<SendNotificationToInactiveProfileCommandHandler> log, IRepository repository)
         {
             this.messagingService = messagingService;
             this.log = log;
+            this.repository = repository;
         }
         protected override async Task Handle(SendNotificationToInactiveProfileCommand request, CancellationToken cancellationToken)
         {
@@ -23,13 +27,18 @@ namespace Sygic.Corona.Application.Commands
             {
                 if (!string.IsNullOrEmpty(request.Profile.PhoneNumber))
                 {
-                    try
+                    if (request.Profile.LastInactivityNotificationSendTime == null || request.Profile.LastInactivityNotificationSendTime.Value.AddDays(1) < DateTime.UtcNow)
                     {
-                        await messagingService.SendMessageAsync(request.Message, request.Profile.PhoneNumber, cancellationToken);
-                    }
-                    catch (Exception ex)
-                    {
-                        log.LogError(new EventId((int)request.Profile.Id), ex.Message);
+                        try
+                        {
+                            await messagingService.SendMessageAsync(request.Message, request.Profile.PhoneNumber, cancellationToken);
+                            request.Profile.SetInactivityNotificationSendTime(DateTime.UtcNow);
+                            await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            log.LogError(new EventId((int)request.Profile.Id), ex.Message);
+                        }
                     }
                 }
             }

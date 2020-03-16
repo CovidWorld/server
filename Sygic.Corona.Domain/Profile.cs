@@ -18,6 +18,7 @@ namespace Sygic.Corona.Domain
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
         public DateTime? LastPositionReportTime { get; private set; }
+        public DateTime? LastInactivityNotificationSendTime { get; private set; }
 
         private readonly List<Contact> contacts;
         public IReadOnlyCollection<Contact> Contacts => contacts;
@@ -92,6 +93,11 @@ namespace Sygic.Corona.Domain
         {
             LastPositionReportTime = DateTime.UtcNow;
             //Location = location;
+        }
+
+        public void SetInactivityNotificationSendTime(DateTime time)
+        {
+            LastInactivityNotificationSendTime = time;
         }
     }
 }
