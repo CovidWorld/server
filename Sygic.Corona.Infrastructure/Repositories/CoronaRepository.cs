@@ -100,7 +100,8 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
         {
-            var profiles = await context.Profiles.Where(x => x.IsInQuarantine)
+            var now = DateTime.UtcNow;
+            var profiles = await context.Profiles.Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
                 .Select(x => new {x.Id, x.DeviceId, x.PhoneNumber, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd})
                 .ToListAsync(cancellationToken);
             var response = profiles.Select(x => new GetQuarantineListResponse
@@ -137,18 +138,9 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
         public async Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken)
         {
-            try
-            {
-                return await context.Profiles.Where(x =>
-                        x.IsInQuarantine && x.LastPositionReportTime < from)
-                    .ToListAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            
+            var now = DateTime.UtcNow;
+            return await context.Profiles.Where(x => x.IsInQuarantine && x.LastPositionReportTime < from && x.QuarantineEnd > now)
+                .ToListAsync(cancellationToken);
         }
     }
 }
