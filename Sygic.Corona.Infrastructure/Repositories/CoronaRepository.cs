@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -132,6 +133,22 @@ namespace Sygic.Corona.Infrastructure.Repositories
             }
             
             return response.Select(x => x.Value);
+        }
+
+        public async Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await context.Profiles.Where(x =>
+                        x.IsInQuarantine && x.LastPositionReportTime < from)
+                    .ToListAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
     }
 }
