@@ -110,22 +110,28 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 QuarantineBeginning = x.QuarantineBeginning,
                 QuarantineEnd = x.QuarantineEnd,
                 LastPositionReportTime = x.LastPositionReportTime
-            }).ToList();
+            }).ToDictionary(x => x.Id);
 
-            var ids = response.Select(x => x.Id).ToList();
+            var ids = response.Keys;
             foreach (uint id in ids)
             {
                 var lastLocation = await context.Locations.Where(x => x.ProfileId == id)
                     .Select(x => new {x.Latitude, x.Longitude, x.Accuracy, x.CreatedOn})
                     .OrderByDescending(x => x.CreatedOn)
                     .FirstOrDefaultAsync(cancellationToken);
-                var profile = response.Single(x => x.Id == id);
-                profile.Latitude = lastLocation.Latitude;
-                profile.Longitude = lastLocation.Longitude;
-                profile.Accuracy = lastLocation.Accuracy;
+                if (lastLocation != null)
+                {
+                    var profile = response[id];
+                    if (profile != null)
+                    {
+                        profile.Latitude = lastLocation.Latitude;
+                        profile.Longitude = lastLocation.Longitude;
+                        profile.Accuracy = lastLocation.Accuracy;
+                    }
+                }
             }
             
-            return response;
+            return response.Select(x => x.Value);
         }
     }
 }
