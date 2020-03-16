@@ -35,6 +35,10 @@ namespace Sygic.Corona.Application.Commands
                     profile.BeginQuarantine(request.QuarantineDuration);
                     await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
                 }
+                else
+                {
+                    throw new DomainException("Profile is already in quarantine");
+                }
             }
         }
     }
