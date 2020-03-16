@@ -9,6 +9,7 @@ using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
+using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Workers;
 
@@ -28,6 +29,13 @@ namespace Sygic.Corona.Workers
                 Environment.GetEnvironmentVariable("CosmosDatabase")));
             builder.Services.AddMediatR(typeof(CreateProfileCommand).GetTypeInfo().Assembly);
             builder.Services.AddScoped<IRepository, CoronaRepository>();
+
+            builder.Services.AddHttpClient<ICloudMessagingService, FirebaseCloudMessagingService>(c =>
+            {
+                c.BaseAddress = new Uri(Environment.GetEnvironmentVariable("FirebaseUrl"));
+                c.DefaultRequestHeaders.Add("Authorization", $"key = {Environment.GetEnvironmentVariable("FirebaseServerKey")}");
+                c.DefaultRequestHeaders.Add("Sender", $"id = {Environment.GetEnvironmentVariable("FirebaseSenderId")}");
+            });
 
             if (Environment.GetEnvironmentVariable("SmsProvider") == "Twilio")
             {
