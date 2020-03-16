@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -41,8 +42,13 @@ namespace Sygic.Corona.Application.Commands
             }
             catch (Twilio.Exceptions.ApiException ex)
             {
-                log.LogError(new EventId((int)profile.Id), ex, "sms API exception");
+                log.LogError(new EventId((int) profile.Id), ex, "sms API exception");
                 throw new DomainException("Phone number is iw wrong format or region is unsupported.");
+            }
+            catch (Exception ex)
+            {
+                log.LogError(new EventId((int)profile.Id), ex, "sms API exception");
+                throw;
             }
             
 

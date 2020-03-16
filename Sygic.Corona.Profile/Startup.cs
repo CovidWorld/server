@@ -6,6 +6,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SmsGate.Opis.Minv;
 using Sygic.Corona.Application.Behaviors;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Application.Validations;
@@ -59,10 +60,25 @@ namespace Sygic.Corona.Profile
                 {
                     c.BaseAddress = new Uri("https://www.googleapis.com/robot/v1/metadata/");
                 });
-            builder.Services.AddSingleton<ISmsMessagingService, SmsMessagingService>(x => new SmsMessagingService(
-                Environment.GetEnvironmentVariable("TwilioAccountSid"),
-                Environment.GetEnvironmentVariable("TwilioAuthToken"),
-                Environment.GetEnvironmentVariable("TwilioPhoneNumber")));
+
+            if (Environment.GetEnvironmentVariable("SmsProvider") == "Twilio")
+            {
+                builder.Services.AddSingleton<ISmsMessagingService, TwilioSmsMessagingService>(x => new TwilioSmsMessagingService(
+                    Environment.GetEnvironmentVariable("TwilioAccountSid"),
+                    Environment.GetEnvironmentVariable("TwilioAuthToken"),
+                    Environment.GetEnvironmentVariable("TwilioPhoneNumber")));
+            }
+            else
+            {
+                builder.Services.AddSingleton(x => new SmsExtClient(
+                    Environment.GetEnvironmentVariable("MinvSmsUrl"),
+                    TimeSpan.FromSeconds(30),
+                    Environment.GetEnvironmentVariable("MinvSmsUserName"),
+                    Environment.GetEnvironmentVariable("MinvSmsPassword")
+                ));
+                builder.Services.AddSingleton<ISmsMessagingService, MinvSmsMessagingService>();
+            }
+            
             builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(Environment.GetEnvironmentVariable("MfaTokenGeneratorSecret")));
             builder.Services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
         }

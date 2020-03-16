@@ -5,13 +5,13 @@ using Twilio.Rest.Api.V2010.Account;
 
 namespace Sygic.Corona.Infrastructure.Services.SmsMessaging
 {
-    public class SmsMessagingService : ISmsMessagingService
+    public class TwilioSmsMessagingService : ISmsMessagingService
     {
         private readonly string accountSid;
         private readonly string authToken;
         private readonly string senderPhoneNumber;
 
-        public SmsMessagingService(string accountSid, string authToken, string senderPhoneNumber)
+        public TwilioSmsMessagingService(string accountSid, string authToken, string senderPhoneNumber)
         {
             this.accountSid = accountSid;
             this.authToken = authToken;
