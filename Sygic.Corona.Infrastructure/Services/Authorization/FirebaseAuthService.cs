@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,14 +16,20 @@ namespace Sygic.Corona.Infrastructure.Services.Authorization
 {
     public class FirebaseAuthService : IAuthService
     {
+        private readonly ILogger<FirebaseAuthService> log;
         private readonly HttpClient client;
         private readonly TokenValidationParameters validationParameters;
 
-        public FirebaseAuthService(HttpClient client, TokenValidationParameters validationParameters)
+        public FirebaseAuthService(
+            ILogger<FirebaseAuthService> log,
+            HttpClient client, 
+            TokenValidationParameters validationParameters)
         {
+            this.log = log;
             this.client = client;
             this.validationParameters = validationParameters;
         }
+        
         public async Task<bool> ValidateTokenAsync(string token, CancellationToken cancellationToken)
         {
             var response = await client.GetAsync("x509/securetoken@system.gserviceaccount.com", cancellationToken);
@@ -46,6 +53,7 @@ namespace Sygic.Corona.Infrastructure.Services.Authorization
             }
             catch (Exception e)
             {
+                log.LogError(e, "Validation failed");
                 return false;
             }
         }
