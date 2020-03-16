@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
@@ -12,11 +13,13 @@ namespace Sygic.Corona.Application.Commands
     {
         private readonly IRepository repository;
         private readonly ISmsMessagingService messagingService;
+        private readonly ILogger log;
 
-        public SendMfaTokenCommandHandler(IRepository repository, ISmsMessagingService messagingService)
+        public SendMfaTokenCommandHandler(IRepository repository, ISmsMessagingService messagingService, ILogger<SendMfaTokenCommandHandler> log)
         {
             this.repository = repository;
             this.messagingService = messagingService;
+            this.log = log;
         }
         public async Task<SendMfaTokenResponse> Handle(SendMfaTokenCommand request, CancellationToken cancellationToken)
         {
@@ -26,7 +29,22 @@ namespace Sygic.Corona.Application.Commands
             {
                 throw new DomainException("Profile not found.");
             }
-            await messagingService.SendMessageAsync(profile.AuthToken, profile.PhoneNumber, cancellationToken);
+
+            if (string.IsNullOrEmpty(profile.PhoneNumber))
+            {
+                throw new DomainException("Phone number not found on profile. Update phone number.");
+            }
+
+            try
+            {
+                await messagingService.SendMessageAsync(profile.AuthToken, profile.PhoneNumber, cancellationToken);
+            }
+            catch (Twilio.Exceptions.ApiException ex)
+            {
+                log.LogError(new EventId((int)profile.Id), ex, "sms API exception");
+                throw new DomainException("Phone number is iw wrong format or region is unsupported.");
+            }
+            
 
             return new SendMfaTokenResponse();
         }

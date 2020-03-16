@@ -27,6 +27,8 @@ namespace Sygic.Corona.Profile
         public override void Configure(IFunctionsHostBuilder builder)
         {
             // inject your dependencies here
+            builder.Services.AddLogging();
+
             builder.Services.AddDbContext<CoronaContext>(o => o.UseCosmos(
                 Environment.GetEnvironmentVariable("CosmosEndpoint"),
                 Environment.GetEnvironmentVariable("CosmosAuthKey"),
