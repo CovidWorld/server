@@ -18,9 +18,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Contracts", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Infrastructure", "Sygic.Corona.Infrastructure\Sygic.Corona.Infrastructure.csproj", "{1565C93F-5714-4BCD-BA0C-BAE7F272F87A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.Workers", "Sygic.Corona.Workers\Sygic.Corona.Workers.csproj", "{4FB897FD-FA4A-481E-808D-7534572F0811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Workers", "Sygic.Corona.Workers\Sygic.Corona.Workers.csproj", "{4FB897FD-FA4A-481E-808D-7534572F0811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.Admin", "Sygic.Corona.Admin\Sygic.Corona.Admin.csproj", "{17EA11FB-7744-4024-8C2F-E81341E8B3A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Admin", "Sygic.Corona.Admin\Sygic.Corona.Admin.csproj", "{17EA11FB-7744-4024-8C2F-E81341E8B3A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
