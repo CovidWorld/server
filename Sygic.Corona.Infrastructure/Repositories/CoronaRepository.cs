@@ -186,9 +186,41 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
         public async Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken)
         {
+            var result = new List<Profile>();
             var now = DateTime.UtcNow;
-            return await context.Profiles.Where(x => x.IsInQuarantine && x.LastPositionReportTime < from && x.QuarantineEnd > now)
+
+            var inactiveProfileCandidates = await context.Profiles
+                .Where(x => x.IsInQuarantine && x.LastPositionReportTime < from && x.QuarantineEnd > now)
                 .ToListAsync(cancellationToken);
+            var inactiveProfileCandidatesGroup = inactiveProfileCandidates
+                .OrderByDescending(x => x.QuarantineEnd)
+                .GroupBy(x => x.PhoneNumber)
+                .ToList();
+
+            //Find if other profile which are sending position with same phone number exist.
+            //TODO maybe it is better to add creation date to profile and always use latest one ?
+            var ph = inactiveProfileCandidatesGroup.Select(p => p.Key);
+            var otherActiveProfilesWithSamePhoneNumber = await context.Profiles
+                .Where(x => ph.Contains(x.PhoneNumber) && x.LastPositionReportTime >= from && x.QuarantineEnd > now)
+                .Select(x => x.PhoneNumber)
+                .ToListAsync(cancellationToken);
+
+            inactiveProfileCandidatesGroup.RemoveAll(x => otherActiveProfilesWithSamePhoneNumber.Contains(x.Key));
+
+            foreach (var inactiveProfileCandidateList in inactiveProfileCandidatesGroup)
+            {
+                var lastInactiveProfile = inactiveProfileCandidateList
+                    .Select(x => x)
+                    .OrderByDescending(x => x.QuarantineEnd)
+                    .FirstOrDefault();
+                result.Add(lastInactiveProfile);
+            }
+
+            var t = await context.Profiles.Where(x =>
+                    inactiveProfileCandidatesGroup.Select(x => x.Key).Contains(x.PhoneNumber)
+                    && x.LastPositionReportTime >= from)
+                .ToListAsync(cancellationToken);
+            return result;
         }
     }
 }
