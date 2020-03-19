@@ -30,22 +30,22 @@ namespace Sygic.Corona.Admin
             ILogger log, 
             CancellationToken cancellationToken)
         {
-            var authHeader = req.Headers.Authorization;
+            //var authHeader = req.Headers.Authorization;
             
-            if (authHeader == null)
-            {
-                log.LogWarning("Missing or invalid authorization header!");
-                return new UnauthorizedResult();
-            }
+            //if (authHeader == null)
+            //{
+            //    log.LogWarning("Missing or invalid authorization header!");
+            //    return new UnauthorizedResult();
+            //}
             
-            bool isAuthorized = await authService.ValidateTokenAsync(authHeader.Parameter, cancellationToken);
+            //bool isAuthorized = await authService.ValidateTokenAsync(authHeader.Parameter, cancellationToken);
 
-            //covid-app-2809a
-            if (!isAuthorized)
-            {
-                log.LogWarning("Unauthorized call.");
-                return new UnauthorizedResult();
-            }
+            ////covid-app-2809a
+            //if (!isAuthorized)
+            //{
+            //    log.LogWarning("Unauthorized call.");
+            //    return new UnauthorizedResult();
+            //}
             
             var command = new GetQuarantineListQuery();
             var result = await mediator.Send(command, cancellationToken);

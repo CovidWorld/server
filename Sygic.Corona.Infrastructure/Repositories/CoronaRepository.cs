@@ -140,9 +140,12 @@ namespace Sygic.Corona.Infrastructure.Repositories
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;
-            var profiles = await context.Profiles.Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
-                .Select(x => new {x.Id, x.DeviceId, x.PhoneNumber, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd})
+            var profiles = await context.Profiles
+                .AsNoTracking()
+                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
+                .Select(x => new {x.Id, x.DeviceId, x.PhoneNumber, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
                 .ToListAsync(cancellationToken);
+
             var response = profiles.Select(x => new GetQuarantineListResponse
             {
                 Id = x.Id,
@@ -150,7 +153,15 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 PhoneNumber = x.PhoneNumber,
                 QuarantineBeginning = x.QuarantineBeginning,
                 QuarantineEnd = x.QuarantineEnd,
-                LastPositionReportTime = x.LastPositionReportTime
+                LastPositionReportTime = x.LastPositionReportTime,
+                AreaExit = x.AreaExit != null ? new AreaExitResponse
+                {
+                    Accuracy = x.AreaExit?.Accuracy,
+                    Latitude = x.AreaExit?.Latitude,
+                    Longitude = x.AreaExit?.Longitude,
+                    RecordDate = x.AreaExit?.RecordDateUtc
+
+                } : null
             }).ToDictionary(x => x.Id);
 
             var ids = response.Keys;
