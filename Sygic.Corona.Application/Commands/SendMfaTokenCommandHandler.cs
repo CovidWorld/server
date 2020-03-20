@@ -38,7 +38,7 @@ namespace Sygic.Corona.Application.Commands
 
             try
             {
-                string message = $"Vas verifikacny kod: {profile.AuthToken}. Covid-19 App";
+                string message = $"Vas Secure kod: {profile.AuthToken}. Covid-19 App";
                 await messagingService.SendMessageAsync(message, profile.PhoneNumber, cancellationToken);
             }
             catch (Twilio.Exceptions.ApiException ex)
