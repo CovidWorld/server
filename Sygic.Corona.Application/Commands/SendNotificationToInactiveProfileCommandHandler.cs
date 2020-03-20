@@ -32,6 +32,9 @@ namespace Sygic.Corona.Application.Commands
                         try
                         {
                             await messagingService.SendMessageAsync(request.Message, request.Profile.PhoneNumber, cancellationToken);
+
+                            log.LogInformation("Inactivity SMS message send", new { phoneNumber = request.Profile.PhoneNumber, type = "INACTIVITY_SMS_SEND"});
+
                             request.Profile.SetInactivityNotificationSendTime(DateTime.UtcNow);
                             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
