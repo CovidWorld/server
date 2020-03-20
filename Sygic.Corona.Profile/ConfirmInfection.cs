@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,8 @@ namespace Sygic.Corona.Profile
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<ConfirmInfectionRequest>(requestBody);
 
-                var command = new ConfirmInfectionCommand(data.DeviceId, data.ProfileId, data.MfaToken);
+                var command = new ConfirmInfectionCommand(data.DeviceId, data.ProfileId, data.MfaToken,
+                    bool.Parse(Environment.GetEnvironmentVariable("ConfirmInfectionNotificationEnabled")));
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();

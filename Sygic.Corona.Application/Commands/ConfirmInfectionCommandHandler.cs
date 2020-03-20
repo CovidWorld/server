@@ -37,15 +37,18 @@ namespace Sygic.Corona.Application.Commands
                     profile.ConfirmInfection();
                     await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-                    var query = new GetContactsQuery(profile.DeviceId, profile.Id);
-                    var result = await mediator.Send(query, cancellationToken);
-                    var groupedContacts = result.Contacts.GroupBy(x => x.ProfileId);
-                    foreach (var contact in groupedContacts)
+                    if (request.SendingNotificationsEnabled)
                     {
-                        var firstContactFromGroup = contact.First();
-                        var data = new { messageType = "CORONA_INFECTION_CONFIRMED" };
-                        var command = new SendPushNotificationCommand(firstContactFromGroup.ProfileId, data);
-                        await mediator.Send(command, cancellationToken);
+                        var query = new GetContactsQuery(profile.DeviceId, profile.Id);
+                        var result = await mediator.Send(query, cancellationToken);
+                        var groupedContacts = result.Contacts.GroupBy(x => x.ProfileId);
+                        foreach (var contact in groupedContacts)
+                        {
+                            var firstContactFromGroup = contact.First();
+                            var data = new { messageType = "CORONA_INFECTION_CONFIRMED" };
+                            var command = new SendPushNotificationCommand(firstContactFromGroup.ProfileId, data);
+                            await mediator.Send(command, cancellationToken);
+                        }
                     }
                 }
             }
