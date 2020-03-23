@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Reflection;
 using FluentValidation;
 using MediatR;
@@ -70,13 +71,13 @@ namespace Sygic.Corona.Profile
             }
             else
             {
-                builder.Services.AddSingleton(x => new SmsExtClient(
-                    Environment.GetEnvironmentVariable("MinvSmsUrl"),
-                    TimeSpan.FromSeconds(30),
-                    Environment.GetEnvironmentVariable("MinvSmsUserName"),
-                    Environment.GetEnvironmentVariable("MinvSmsPassword")
-                ));
-                builder.Services.AddSingleton<ISmsMessagingService, MinvSmsMessagingService>();
+                var authenticationString = $"{Environment.GetEnvironmentVariable("MinvSmsUserName")}:{Environment.GetEnvironmentVariable("MinvSmsPassword")}";
+                var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+                builder.Services.AddHttpClient<ISmsMessagingService, MinvSmsMessagingService>(c =>
+                    {
+                        c.BaseAddress = new Uri(Environment.GetEnvironmentVariable("MinvSmsUrl"));Environment.GetEnvironmentVariable("MinvSmsUrl");
+                        c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+                    });
             }
             
             builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(Environment.GetEnvironmentVariable("MfaTokenGeneratorSecret")));
