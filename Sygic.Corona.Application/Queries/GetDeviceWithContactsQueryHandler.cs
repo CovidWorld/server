@@ -42,7 +42,14 @@ namespace Sygic.Corona.Application.Queries
                     SourceDeviceId = x.SourceDeviceId,
                     SeenProfileId = x.SeenProfileId,
                     Duration = x.Duration,
-                    Timestamp = x.Timestamp
+                    Timestamp = x.Timestamp,
+                    Location = new ContactLocationResponse
+                    {
+                        Latitude = x.Latitude,
+                        Longitude = x.Longitude,
+                        Accuracy = x.Accuracy
+                    }
+
                 }).ToList()
             };
 
