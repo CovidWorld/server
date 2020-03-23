@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using FluentValidation;
+using HashidsNet;
 using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SmsGate.Opis.Minv;
 using Sygic.Corona.Admin;
 using Sygic.Corona.Application.Behaviors;
 using Sygic.Corona.Application.Commands;
@@ -17,7 +17,7 @@ using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
-using Sygic.Corona.Infrastructure.Services.SmsMessaging;
+using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 
 [assembly: FunctionsStartup(typeof(Startup))]
@@ -61,26 +61,13 @@ namespace Sygic.Corona.Admin
                     c.BaseAddress = new Uri("https://www.googleapis.com/robot/v1/metadata/");
                 });
 
-            // if (Environment.GetEnvironmentVariable("SmsProvider") == "Twilio")
-            // {
-            //     builder.Services.AddSingleton<ISmsMessagingService, TwilioSmsMessagingService>(x => new TwilioSmsMessagingService(
-            //         Environment.GetEnvironmentVariable("TwilioAccountSid"),
-            //         Environment.GetEnvironmentVariable("TwilioAuthToken"),
-            //         Environment.GetEnvironmentVariable("TwilioPhoneNumber")));
-            // }
-            // else
-            // {
-            //     builder.Services.AddSingleton(x => new SmsExtClient(
-            //         Environment.GetEnvironmentVariable("MinvSmsUrl"),
-            //         TimeSpan.FromSeconds(30),
-            //         Environment.GetEnvironmentVariable("MinvSmsUserName"),
-            //         Environment.GetEnvironmentVariable("MinvSmsPassword")
-            //     ));
-            //     builder.Services.AddSingleton<ISmsMessagingService, MinvSmsMessagingService>();
-            // }
-            
             builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(Environment.GetEnvironmentVariable("MfaTokenGeneratorSecret")));
             builder.Services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
+
+            builder.Services.AddSingleton<IHashids>(x => new Hashids(
+                Environment.GetEnvironmentVariable("ProfileHashIdSalt"),
+                int.Parse(Environment.GetEnvironmentVariable("ProfileHashIdLength"))));
+            builder.Services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
         }
     }
 }
