@@ -14,7 +14,7 @@ namespace Sygic.Corona.Contracts.Requests
     {
         public int Timestamp { get; set; }
         public uint SeenProfileId { get; set; }
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public double? Accuracy { get; set; }

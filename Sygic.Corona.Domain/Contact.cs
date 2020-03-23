@@ -9,7 +9,7 @@ namespace Sygic.Corona.Domain
         public string SourceDeviceId { get; private set; }
         public uint SeenProfileId { get; private set; }
         public int Timestamp { get; private set; }
-        public TimeSpan Duration { get; private set; }
+        public TimeSpan? Duration { get; private set; }
         public double? Latitude { get; private set; }
         public double? Longitude { get; private set; }
         public double? Accuracy { get; private set; }
@@ -19,7 +19,7 @@ namespace Sygic.Corona.Domain
             Id = Guid.NewGuid();
         }
 
-        public Contact(uint profileId, string sourceDeviceId, uint seenProfileId, int timestamp, TimeSpan duration, double? latitude, double? longitude, double? accuracy)
+        public Contact(uint profileId, string sourceDeviceId, uint seenProfileId, int timestamp, TimeSpan? duration, double? latitude, double? longitude, double? accuracy)
             : this()
         {
             ProfileId = profileId;
