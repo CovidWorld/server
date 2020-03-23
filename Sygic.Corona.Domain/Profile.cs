@@ -10,11 +10,11 @@ namespace Sygic.Corona.Domain
         public string PhoneNumber { get; private set; }
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
-        //public Location Location { get; private set; }
         public AreaExit AreaExit { get; private set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
         public bool IsInQuarantine { get; private set; }
+        public bool IsVerified { get; private set; }
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
         public DateTime? LastPositionReportTime { get; private set; }
@@ -37,10 +37,10 @@ namespace Sygic.Corona.Domain
             DeviceId = deviceId;
             PushToken = pushToken;
             Locale = locale;
-            //Location = location;
             AuthToken = authToken;
             ConfirmedInfection = false;
             IsInQuarantine = false;
+            IsVerified = false;
             PhoneNumber = phoneNumber;
         }
 
@@ -48,12 +48,6 @@ namespace Sygic.Corona.Domain
         {
             var contact = new Contact(Id, DeviceId, seenProfileId, timestamp, duration, latitude, longitude, accuracy);
             contacts.Add(contact);
-        }
-
-        public void AddLocation(Location location)
-        {
-            locations.Add(location);
-            LastPositionReportTime = DateTime.UtcNow;
         }
 
         public void AddLocations(IEnumerable<Location> locationsList)
@@ -89,15 +83,14 @@ namespace Sygic.Corona.Domain
             QuarantineEnd = QuarantineBeginning.Value.Add(duration);
         }
 
-        public void ReportPosition(Location location)
-        {
-            LastPositionReportTime = DateTime.UtcNow;
-            //Location = location;
-        }
-
         public void SetInactivityNotificationSendTime(DateTime time)
         {
             LastInactivityNotificationSendTime = time;
+        }
+
+        public void Verify()
+        {
+            IsVerified = true;
         }
     }
 }

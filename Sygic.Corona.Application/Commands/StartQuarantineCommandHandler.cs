@@ -25,7 +25,7 @@ namespace Sygic.Corona.Application.Commands
             }
             if (profile.AuthToken != request.MfaToken)
             {
-                throw new DomainException("Wrong maf token.");
+                throw new DomainException("Wrong mfa token.");
             }
 
             if (profile.AuthToken == request.MfaToken)
@@ -37,7 +37,7 @@ namespace Sygic.Corona.Application.Commands
                 }
                 else
                 {
-                    throw new DomainException("Profile is already in quarantine");
+                    throw new DomainException("Profile is already in quarantine.");
                 }
             }
         }
