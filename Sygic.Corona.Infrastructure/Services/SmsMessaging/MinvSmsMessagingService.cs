@@ -1,13 +1,20 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using Sygic.Corona.Domain.Common;
+using Sygic.Corona.Infrastructure.Services.SmsMessaging.Models;
 
 namespace Sygic.Corona.Infrastructure.Services.SmsMessaging
 {
     public class MinvSmsMessagingService : ISmsMessagingService
     {
         private readonly HttpClient client;
+        readonly XNamespace soapNs = "http://www.w3.org/2003/05/soap-envelope";
+        readonly XNamespace smsNs = "http://schema.minv.sk/IP/ESISPZ-SMS/SmsEXT-v1";
 
         public MinvSmsMessagingService(HttpClient client)
         {
@@ -15,26 +22,78 @@ namespace Sygic.Corona.Infrastructure.Services.SmsMessaging
         }
         public async Task SendMessageAsync(string messageText, string phoneNumber, CancellationToken cancellationToken)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "");
+            XDocument soapRequest = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "no"),
+                new XElement(soapNs + "Envelope",
+                    new XAttribute(XNamespace.Xmlns + "soap", soapNs),
+                    new XAttribute(XNamespace.Xmlns + "sms", smsNs),
+                    new XElement(soapNs + "Body",
+                        new XElement(smsNs + "SendMessage",
+                            new XElement(smsNs + "Destination", phoneNumber),
+                            new XElement(smsNs + "Message", messageText))
+                    )
+                )
+            );
+            await SendRequest(soapRequest, "SendMessage", cancellationToken);
+        }
 
-            const string contentType = "application/soap+xml;action=\"http://schema.minv.sk/IP/ESISPZ-SMS/SmsEXT-v1/ISmsExt/SendMessage\"";
-            var message = new StringContent(
-                $"<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:sms=\"http://schema.minv.sk/IP/ESISPZ-SMS/SmsEXT-v1\">\r\n   <soap:Header/>\r\n   <soap:Body>\r\n      <sms:SendMessage>\r\n         <sms:Destination>{phoneNumber}</sms:Destination>\r\n         <sms:Message>{messageText}</sms:Message>\r\n      </sms:SendMessage>\r\n   </soap:Body>\r\n</soap:Envelope>");
-            request.Content = message;
+        public async Task PingAsync(CancellationToken cancellationToken)
+        {
+            XDocument soapRequest = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "no"),
+                new XElement(soapNs + "Envelope",
+                    new XAttribute(XNamespace.Xmlns + "soap", soapNs),
+                    new XAttribute(XNamespace.Xmlns + "sms", smsNs),
+                    new XElement(soapNs + "Body",
+                        new XElement(smsNs + "Ping")
+                    )
+                )
+            );
+            await SendRequest(soapRequest, "Ping", cancellationToken);
+        }
 
-            //var tt = client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", contentType);
-            //request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-
-            var t = request.Headers.TryAddWithoutValidation("Content-Type", contentType);
-           
-            var response = await client.SendAsync(request, cancellationToken);
-
-            var result = await response.Content.ReadAsStringAsync();
-            
-            if (!response.IsSuccessStatusCode)
+        private async Task SendRequest(XDocument soapRequest, string ext, CancellationToken cancellationToken)
+        {
+            using (var request = new HttpRequestMessage()
             {
-                throw new DomainException("Error during sending sms.");
+                Method = HttpMethod.Post,
+            })
+            {
+                request.Content = new StringContent(soapRequest.ToString());
+                request.Content.Headers.Clear();
+
+                request.Content.Headers.TryAddWithoutValidation("Content-Type",
+                    $"application/soap+xml;action=\"http://schema.minv.sk/IP/ESISPZ-SMS/SmsEXT-v1/ISmsExt/{ext}\"");
+                HttpResponseMessage response = await client.SendAsync(request, cancellationToken);
+
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new DomainException("Error during sending sms.");
+                }
+
+                var resultString = await response.Content.ReadAsStringAsync();
+                var result = Deserialize<Envelope>(resultString);
+
+                //api returns HTTP:200 with invalid inputs ...
+                var resultStatus = result?.Body?.SendMessageResponse?.SendMessageResult?.ResultStatus;
+                if (!string.IsNullOrEmpty(resultStatus) && !string.Equals(resultStatus, "ok", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var errMsg = result?.Body.SendMessageResponse?.SendMessageResult?.ErrMsg;
+                    throw new DomainException($"Error during sending sms: {resultStatus}: {errMsg}");
+                }
             }
+        }
+
+        private static T Deserialize<T>(string xmlStr)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            T result;
+            using (TextReader reader = new StringReader(xmlStr))
+            {
+                result = (T)serializer.Deserialize(reader);
+            }
+            return result;
         }
     }
 }

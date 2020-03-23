@@ -36,3 +36,5 @@ PublishProfiles/
 
 # Visual Studio
 .vs/
+
+local.settings.json
