@@ -21,8 +21,10 @@ namespace Sygic.Corona.Workers
         [FunctionName("OldDataCleanWorker")]
         public async Task Run([TimerTrigger("%OldDataCleanCron%")]TimerInfo myTimer, ILogger log, CancellationToken cancellationToken)
         {
-            var command = new DeleteOldContactsCommand(TimeSpan.Parse(Environment.GetEnvironmentVariable("OldDataCleanInterval")));
-            await mediator.Send(command, cancellationToken);
+            var contactsCommand = new DeleteOldContactsCommand(TimeSpan.Parse(Environment.GetEnvironmentVariable("OldDataCleanInterval")));
+            var locationsCommand = new DeleteOldLocationsCommand(TimeSpan.Parse(Environment.GetEnvironmentVariable("OldDataCleanInterval")));
+            await mediator.Send(contactsCommand, cancellationToken);
+            await mediator.Send(locationsCommand, cancellationToken);
         }
     }
 }
