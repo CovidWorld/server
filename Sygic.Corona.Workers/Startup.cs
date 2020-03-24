@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Reflection;
 using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SmsGate.Opis.Minv;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
+using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Workers;
 
@@ -46,14 +47,16 @@ namespace Sygic.Corona.Workers
             }
             else
             {
-                builder.Services.AddSingleton(x => new SmsExtClient(
-                    Environment.GetEnvironmentVariable("MinvSmsUrl"),
-                    TimeSpan.FromSeconds(30),
-                    Environment.GetEnvironmentVariable("MinvSmsUserName"),
-                    Environment.GetEnvironmentVariable("MinvSmsPassword")
-                ));
-                builder.Services.AddSingleton<ISmsMessagingService, MinvSmsMessagingService>();
+                var authenticationString = $"{Environment.GetEnvironmentVariable("MinvSmsUserName")}:{Environment.GetEnvironmentVariable("MinvSmsPassword")}";
+                var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(authenticationString));
+                builder.Services.AddHttpClient<ISmsMessagingService, MinvSmsMessagingService>(c =>
+                {
+                    c.BaseAddress = new Uri(Environment.GetEnvironmentVariable("MinvSmsUrl")); Environment.GetEnvironmentVariable("MinvSmsUrl");
+                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+                });
             }
+
+            builder.Services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
         }
     }
 }

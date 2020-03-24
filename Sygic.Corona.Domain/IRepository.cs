@@ -29,5 +29,6 @@ namespace Sygic.Corona.Domain
         Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken);
         Task<IEnumerable<Location>> GetLocationsForProfileNt(uint profileId, CancellationToken ct);
         Task<Location> GetLastLocationForProfileNt(uint profileId, CancellationToken ct);
+        Task DeleteContactsAsync(int interval, CancellationToken cancellationToken);
     }
 }
