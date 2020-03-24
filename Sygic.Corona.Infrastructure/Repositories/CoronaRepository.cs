@@ -137,6 +137,30 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return locations;
         }
 
+        /// <summary>
+        /// Delete all records older than timestamp
+        /// </summary>
+        /// <param name="interval">epoch timestamp</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task DeleteContactsAsync(int interval, CancellationToken cancellationToken)
+        {
+            var contacts = await context.Contacts
+                .Where(x => x.Timestamp < interval)
+                .ToListAsync(cancellationToken);
+
+            context.Contacts.RemoveRange(contacts);
+        }
+
+        public async Task DeleteLocationsAsync(DateTime interval, CancellationToken cancellationToken)
+        {
+            var locations = await context.Locations
+                .Where(x => x.CreatedOn < interval)
+                .ToListAsync(cancellationToken);
+
+            context.Locations.RemoveRange(locations);
+        }
+
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;
