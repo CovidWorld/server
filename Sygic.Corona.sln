@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Workers", "Syg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Admin", "Sygic.Corona.Admin\Sygic.Corona.Admin.csproj", "{17EA11FB-7744-4024-8C2F-E81341E8B3A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.Infrastructure.Tests", "Sygic.Corona.Infrastructure.Tests\Sygic.Corona.Infrastructure.Tests.csproj", "{31B9CCFB-BD57-4774-8247-F17229090CB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Infrastructure.Tests", "Sygic.Corona.Infrastructure.Tests\Sygic.Corona.Infrastructure.Tests.csproj", "{31B9CCFB-BD57-4774-8247-F17229090CB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

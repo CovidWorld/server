@@ -136,7 +136,30 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
             return locations;
         }
-        
+
+        public async Task<IEnumerable<Profile>> GetProfilesByPhoneNumberAsyncNt(string searchTherm, int limit, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var t = await context.Profiles
+                    .FromSqlRaw("SELECT * FROM c WHERE c.Discriminator = \"Profile\" AND CONTAINS(c.PhoneNumber, \"BEER\")")
+                    .ToListAsync(cancellationToken);
+
+                return await context.Profiles
+                    .AsNoTracking()
+                    //.Where(x => x.PhoneNumber.StartsWith(searchTherm))
+                    //.OrderBy(x => x.Id)
+                    //.Take(limit)
+                    .ToListAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+        }
+
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;

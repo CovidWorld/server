@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using FluentValidation;
 using HashidsNet;
 using MediatR;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Fluent;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Sygic.Corona.Admin;
@@ -16,6 +20,7 @@ using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
+using Sygic.Corona.Infrastructure.Services.Cosmos;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
@@ -68,6 +73,28 @@ namespace Sygic.Corona.Admin
                 Environment.GetEnvironmentVariable("ProfileHashIdSalt"),
                 int.Parse(Environment.GetEnvironmentVariable("ProfileHashIdLength"))));
             builder.Services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
+            builder.Services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync().GetAwaiter().GetResult());
+        }
+
+        /// <summary>
+        /// Creates a Cosmos DB database and a container with the specified partition key. 
+        /// </summary>
+        /// <returns></returns>
+        private static async Task<CosmosDbService> InitializeCosmosClientInstanceAsync()
+        {
+            string databaseName = Environment.GetEnvironmentVariable("CosmosDatabase");
+            string containerName = Environment.GetEnvironmentVariable("CosmosContainer");
+            string account = Environment.GetEnvironmentVariable("CosmosEndpoint");
+            string key = Environment.GetEnvironmentVariable("CosmosAuthKey");
+            CosmosClientBuilder clientBuilder = new CosmosClientBuilder(account, key);
+            CosmosClient client = clientBuilder
+                .WithConnectionModeDirect()
+                .Build();
+            CosmosDbService cosmosDbService = new CosmosDbService(client, databaseName, containerName);
+            DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
+            await database.Database.CreateContainerIfNotExistsAsync(containerName, Environment.GetEnvironmentVariable("CosmosPartitionKey"));
+
+            return cosmosDbService;
         }
     }
 }
