@@ -8,6 +8,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Sygic.Corona.Api;
 using Sygic.Corona.Application.Behaviors;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Application.Validations;
@@ -20,10 +21,9 @@ using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
-using Sygic.Corona.Profile;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace Sygic.Corona.Profile
+namespace Sygic.Corona.Api
 {
     public class Startup : FunctionsStartup
     {
