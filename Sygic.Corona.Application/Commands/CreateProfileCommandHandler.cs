@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 
 namespace Sygic.Corona.Application.Commands
@@ -11,11 +12,13 @@ namespace Sygic.Corona.Application.Commands
     {
         private readonly IRepository repository;
         private readonly ITokenGenerator tokenGenerator;
+        private readonly IHashIdGenerator hashGenerator;
 
-        public CreateProfileCommandHandler(IRepository repository, ITokenGenerator tokenGenerator)
+        public CreateProfileCommandHandler(IRepository repository, ITokenGenerator tokenGenerator, IHashIdGenerator hashGenerator)
         {
             this.repository = repository;
             this.tokenGenerator = tokenGenerator;
+            this.hashGenerator = hashGenerator;
         }
         public async Task<CreateProfileResponse> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
         {
@@ -41,10 +44,12 @@ namespace Sygic.Corona.Application.Commands
 
             string token = tokenGenerator.Generate();
 
-            var location = new Location(request.Latitude, request.Longitude, request.Accuracy);
-            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale, location, token, request.PhoneNumber);
+            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale,token, request.PhoneNumber);
 
             await repository.CreateProfileAsync(profile, cancellationToken);
+            await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            profile.ChangeMedicalId(hashGenerator.Generate(profile.Id));
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return new CreateProfileResponse{ ProfileId = profile.Id, DeviceId = profile.DeviceId };

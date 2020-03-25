@@ -2,12 +2,12 @@
 using System.Net.Http.Headers;
 using System.Reflection;
 using FluentValidation;
+using HashidsNet;
 using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SmsGate.Opis.Minv;
 using Sygic.Corona.Application.Behaviors;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Application.Validations;
@@ -17,6 +17,7 @@ using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
+using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 using Sygic.Corona.Profile;
@@ -82,6 +83,12 @@ namespace Sygic.Corona.Profile
             
             builder.Services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(Environment.GetEnvironmentVariable("MfaTokenGeneratorSecret")));
             builder.Services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
+
+            builder.Services.AddSingleton<IHashids>(x => new Hashids(
+                Environment.GetEnvironmentVariable("MedicalIdHashSalt"), 
+                int.Parse(Environment.GetEnvironmentVariable("MedicalIdHashMinValue")),
+                Environment.GetEnvironmentVariable("MedicalIdHashAlphabet")));
+            builder.Services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
         }
     }
 }
