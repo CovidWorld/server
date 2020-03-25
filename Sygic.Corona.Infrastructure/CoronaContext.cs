@@ -9,14 +9,18 @@ namespace Sygic.Corona.Infrastructure
 {
     public class CoronaContext : DbContext, IUnitOfWork
     {
+        protected CoronaContext()
+        {
+            
+        }
         public CoronaContext(DbContextOptions options) : base(options)
         {
             
         }
 
-        public DbSet<Profile> Profiles { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Profile> Profiles { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
