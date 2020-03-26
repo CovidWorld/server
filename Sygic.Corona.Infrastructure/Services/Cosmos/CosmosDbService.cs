@@ -19,7 +19,7 @@ namespace Sygic.Corona.Infrastructure.Services.Cosmos
         {
             
             var queryString =
-                "SELECT TOP @limit c.Id, c.DeviceId, c.PhoneNumber, c.LastPositionReportTime, c.IsInQuarantine FROM c WHERE c.Discriminator = 'Profile' AND CONTAINS(c.PhoneNumber, @searchTerm)";
+                "SELECT TOP @limit c.ProfileId, c.DeviceId, c.PhoneNumber, c.LastPositionReportTime, c.IsInQuarantine FROM c WHERE c.Discriminator = 'Profile' AND CONTAINS(c.PhoneNumber, @searchTerm)";
             var queryDefinition = new QueryDefinition(queryString)
                 .WithParameter("@searchTerm", searchTerm)
                 .WithParameter("@limit", limit);

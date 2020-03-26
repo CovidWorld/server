@@ -25,7 +25,7 @@ namespace Sygic.Corona.Application.Queries
             {
                 PhoneNumber = x.PhoneNumber,
                 DeviceId = x.DeviceId,
-                ProfileId = x.Id,
+                ProfileId = x.ProfileId,
                 LastPositionReportTime = x.LastPositionReportTime,
                 IsInQuarantine = x.IsInQuarantine
             });
