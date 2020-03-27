@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Infrastructure.Services.AutoNumberGenerating;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 
@@ -13,12 +14,15 @@ namespace Sygic.Corona.Application.Commands
         private readonly IRepository repository;
         private readonly ITokenGenerator tokenGenerator;
         private readonly IHashIdGenerator hashGenerator;
+        private readonly IAutoNumberGenerator idGenerator;
 
-        public CreateProfileCommandHandler(IRepository repository, ITokenGenerator tokenGenerator, IHashIdGenerator hashGenerator)
+        public CreateProfileCommandHandler(IRepository repository, ITokenGenerator tokenGenerator, 
+            IHashIdGenerator hashGenerator, IAutoNumberGenerator idGenerator)
         {
             this.repository = repository;
             this.tokenGenerator = tokenGenerator;
             this.hashGenerator = hashGenerator;
+            this.idGenerator = idGenerator;
         }
         public async Task<CreateProfileResponse> Handle(CreateProfileCommand request, CancellationToken cancellationToken)
         {
@@ -39,8 +43,7 @@ namespace Sygic.Corona.Application.Commands
                 return new CreateProfileResponse { ProfileId = existingProfile.Id, DeviceId = existingProfile.DeviceId };
             }
 
-            uint lastId = await repository.GetLastIdAsync(cancellationToken);
-            uint nextId = lastId + 1;
+            uint nextId = idGenerator.Generate("profile");
 
             string token = tokenGenerator.Generate();
 

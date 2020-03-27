@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AzureAutoNumber" Version="1.0.0" />
     <PackageReference Include="Hashids.net" Version="1.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="3.1.3" />

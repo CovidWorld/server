@@ -16,6 +16,7 @@ using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.Authorization;
+using Sygic.Corona.Infrastructure.Services.AutoNumberGenerating;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
@@ -89,6 +90,12 @@ namespace Sygic.Corona.Api
                 int.Parse(Environment.GetEnvironmentVariable("MedicalIdHashMinValue")),
                 Environment.GetEnvironmentVariable("MedicalIdHashAlphabet")));
             builder.Services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
+
+            builder.Services.AddSingleton<IAutoNumberGenerator, AutoNumberGenerator>(x => new AutoNumberGenerator(
+                Environment.GetEnvironmentVariable("AutoNumberStorageConnection"),
+                Environment.GetEnvironmentVariable("AutoNumberContainerName"),
+                int.Parse(Environment.GetEnvironmentVariable("AutoNumberBatchSize")),
+                int.Parse(Environment.GetEnvironmentVariable("AutoNumberMaxWriteAttempts"))));
         }
     }
 }
