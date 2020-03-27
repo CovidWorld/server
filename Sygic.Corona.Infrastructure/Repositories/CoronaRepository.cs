@@ -56,9 +56,11 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
         public async Task<uint> GetLastIdAsync(CancellationToken cancellationToken)
         {
-            return await context.Profiles.OrderByDescending(x => x.Id)
+            var profilesIds = await context.Profiles.AsNoTracking()
                 .Select(x => x.Id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .ToListAsync(cancellationToken);
+            uint lastId = profilesIds.Max();
+            return lastId;
         }
 
         public async Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken)
