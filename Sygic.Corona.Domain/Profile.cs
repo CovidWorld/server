@@ -16,7 +16,8 @@ namespace Sygic.Corona.Domain
         public bool IsInQuarantine { get; private set; }
         public bool IsVerified { get; private set; }
         public string MedicalId { get; private set; }
-        public string CovidPass { get; set; }
+        public string CovidPass { get; private set; }
+        public DateTime? CreatedOn { get; private set; }
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
         public DateTime? LastPositionReportTime { get; private set; }
@@ -32,6 +33,7 @@ namespace Sygic.Corona.Domain
         {
             contacts = new List<Contact>();
             locations = new List<Location>();
+            CreatedOn = DateTime.UtcNow;
         }
         public Profile(uint id, string deviceId, string pushToken, string locale, string authToken, string phoneNumber) : this()
         {
