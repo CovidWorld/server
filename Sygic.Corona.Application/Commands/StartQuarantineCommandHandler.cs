@@ -27,6 +27,7 @@ namespace Sygic.Corona.Application.Commands
             if (profile.IsInQuarantine == false)
             {
                 profile.BeginQuarantine(request.StartDate, request.EndDate);
+                profile.AssignCovidPass(request.CovidPass);
                 await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
             else

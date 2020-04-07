@@ -16,6 +16,7 @@ namespace Sygic.Corona.Domain
         public bool IsInQuarantine { get; private set; }
         public bool IsVerified { get; private set; }
         public string MedicalId { get; private set; }
+        public string CovidPass { get; set; }
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
         public DateTime? LastPositionReportTime { get; private set; }
@@ -104,6 +105,11 @@ namespace Sygic.Corona.Domain
         public void ChangeMedicalId(string medicalId)
         {
             MedicalId = medicalId;
+        }
+
+        public void AssignCovidPass(string covidPass)
+        {
+            CovidPass = covidPass;
         }
     }
 }
