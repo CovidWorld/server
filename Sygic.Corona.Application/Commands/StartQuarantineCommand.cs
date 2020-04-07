@@ -7,15 +7,17 @@ namespace Sygic.Corona.Application.Commands
     {
         public string DeviceId { get; }
         public uint ProfileId { get; }
-        public string MfaToken { get; }
-        public TimeSpan QuarantineDuration { get; }
+        public string CovidPass { get; }
+        public DateTime StartDate { get; }
+        public DateTime EndDate { get; }
 
-        public StartQuarantineCommand(string deviceId, uint profileId, string mfaToken, TimeSpan quarantineDuration)
+        public StartQuarantineCommand(string deviceId, uint profileId, string covidPass, DateTime startDate, DateTime endDate)
         {
             DeviceId = deviceId;
             ProfileId = profileId;
-            MfaToken = mfaToken;
-            QuarantineDuration = quarantineDuration;
+            CovidPass = covidPass;
+            StartDate = startDate;
+            EndDate = endDate;
         }
     }
 }

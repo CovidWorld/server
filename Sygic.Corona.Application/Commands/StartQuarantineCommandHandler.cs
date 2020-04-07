@@ -23,22 +23,15 @@ namespace Sygic.Corona.Application.Commands
             {
                 throw new DomainException("Profile not found.");
             }
-            if (profile.AuthToken != request.MfaToken)
+            
+            if (profile.IsInQuarantine == false)
             {
-                throw new DomainException("Wrong mfa token.");
+                profile.BeginQuarantine(request.StartDate, request.EndDate);
+                await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
-
-            if (profile.AuthToken == request.MfaToken)
+            else
             {
-                if (profile.IsInQuarantine == false)
-                {
-                    profile.BeginQuarantine(request.QuarantineDuration);
-                    await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
-                }
-                else
-                {
-                    throw new DomainException("Profile is already in quarantine.");
-                }
+                throw new DomainException("Profile is already in quarantine.");
             }
         }
     }

@@ -6,7 +6,8 @@ namespace Sygic.Corona.Contracts.Requests
     {
         public string DeviceId { get; set; }
         public uint ProfileId { get; set; }
-        public string MfaToken { get; set; }
-        public TimeSpan Duration { get; set; }
+        public string CovidPass { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

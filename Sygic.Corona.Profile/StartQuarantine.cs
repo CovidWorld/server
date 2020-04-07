@@ -36,7 +36,7 @@ namespace Sygic.Corona.Api
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<StartQuarantineRequest>(requestBody);
 
-                var command = new StartQuarantineCommand(data.DeviceId, data.ProfileId, data.MfaToken, data.Duration);
+                var command = new StartQuarantineCommand(data.DeviceId, data.ProfileId, data.CovidPass, data.StartDate, data.EndDate);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();
