@@ -36,7 +36,7 @@ namespace Sygic.Corona.Api
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<CreateProfileRequest>(requestBody);
             
-            var command = new CreateProfileCommand(data.DeviceId, data.PushToken, data.PhoneNumber, data.Locale, data.Latitude, data.Longitude, data.Accuracy);
+            var command = new CreateProfileCommand(data.DeviceId, data.PushToken,data.Locale, data.Latitude, data.Longitude, data.Accuracy);
             try
             {
                 var result = await mediator.Send(command, cancellationToken);

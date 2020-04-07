@@ -169,14 +169,13 @@ namespace Sygic.Corona.Infrastructure.Repositories
             var profiles = await context.Profiles
                 .AsNoTracking()
                 .Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
-                .Select(x => new {x.Id, x.DeviceId, x.PhoneNumber, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
+                .Select(x => new {x.Id, x.DeviceId, x.CovidPass, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
                 .ToListAsync(cancellationToken);
 
             var response = profiles.Select(x => new GetQuarantineListResponse
             {
                 Id = x.Id,
                 DeviceId = x.DeviceId,
-                PhoneNumber = x.PhoneNumber,
                 QuarantineBeginning = x.QuarantineBeginning,
                 QuarantineEnd = x.QuarantineEnd,
                 LastPositionReportTime = x.LastPositionReportTime,
@@ -232,15 +231,15 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
             var inactiveProfileCandidatesGroup = inactiveProfileCandidates
                 .OrderByDescending(x => x.QuarantineEnd)
-                .GroupBy(x => x.PhoneNumber)
+                .GroupBy(x => x.CovidPass)
                 .ToList();
 
             //Find if other profile which are sending position with same phone number exist.
             //TODO maybe it is better to add creation date to profile and always use latest one ?
             var phoneNumbers = inactiveProfileCandidatesGroup.Select(p => p.Key);
             var otherActiveProfilesWithSamePhoneNumber = await context.Profiles
-                .Where(x => phoneNumbers.Contains(x.PhoneNumber) && x.LastPositionReportTime >= from && x.QuarantineEnd > now)
-                .Select(x => x.PhoneNumber)
+                .Where(x => phoneNumbers.Contains(x.CovidPass) && x.LastPositionReportTime >= from && x.QuarantineEnd > now)
+                .Select(x => x.CovidPass)
                 .ToListAsync(cancellationToken);
 
             inactiveProfileCandidatesGroup.RemoveAll(x => otherActiveProfilesWithSamePhoneNumber.Contains(x.Key));

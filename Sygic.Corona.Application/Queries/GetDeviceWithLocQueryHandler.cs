@@ -32,7 +32,7 @@ namespace Sygic.Corona.Application.Queries
             {
                 Id = profile.Id,
                 DeviceId = profile.DeviceId,
-                PhoneNumber = profile.PhoneNumber,
+                CovidPass = profile.CovidPass,
                 QuarantineBeginning = profile.QuarantineBeginning,
                 QuarantineEnd = profile.QuarantineEnd,
                 Locations = locations.Select(l => new LocationResponse

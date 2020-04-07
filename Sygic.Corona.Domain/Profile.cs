@@ -7,7 +7,7 @@ namespace Sygic.Corona.Domain
     {
         public uint Id { get; private set; }
         public string DeviceId { get; private set; }
-        public string PhoneNumber { get; private set; }
+        //public string PhoneNumber { get; private set; }
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
         public AreaExit AreaExit { get; private set; }
@@ -35,7 +35,7 @@ namespace Sygic.Corona.Domain
             locations = new List<Location>();
             CreatedOn = DateTime.UtcNow;
         }
-        public Profile(uint id, string deviceId, string pushToken, string locale, string authToken, string phoneNumber) : this()
+        public Profile(uint id, string deviceId, string pushToken, string locale, string authToken) : this()
         {
             Id = id;
             DeviceId = deviceId;
@@ -45,7 +45,6 @@ namespace Sygic.Corona.Domain
             ConfirmedInfection = false;
             IsInQuarantine = false;
             IsVerified = false;
-            PhoneNumber = phoneNumber;
         }
 
         public void AddContact(uint seenProfileId, int timestamp, TimeSpan duration, double? latitude, double? longitude, int? accuracy)
@@ -74,12 +73,7 @@ namespace Sygic.Corona.Domain
         {
             PushToken = pushToken;
         }
-
-        public void UpdatePhoneNumber(string phoneNumber)
-        {
-            PhoneNumber = phoneNumber;
-        }
-
+        
         public void BeginQuarantine(TimeSpan duration)
         {
             IsInQuarantine = true;

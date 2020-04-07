@@ -33,11 +33,7 @@ namespace Sygic.Corona.Application.Commands
                 {
                     existingProfile.UpdatePushToken(request.PushToken);
                 }
-
-                if (existingProfile.PhoneNumber != request.PhoneNumber)
-                {
-                    existingProfile.UpdatePhoneNumber(request.PhoneNumber);
-                }
+                
                 await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                 return new CreateProfileResponse { ProfileId = existingProfile.Id, DeviceId = existingProfile.DeviceId };
@@ -47,7 +43,7 @@ namespace Sygic.Corona.Application.Commands
 
             string token = tokenGenerator.Generate();
 
-            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale,token, request.PhoneNumber);
+            var profile = new Profile(nextId, request.DeviceId, request.PushToken, request.Locale,token);
 
             await repository.CreateProfileAsync(profile, cancellationToken);
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -25,15 +25,15 @@ namespace Sygic.Corona.Application.Commands
         {
             if (request.Profile.IsInQuarantine)
             {
-                if (!string.IsNullOrEmpty(request.Profile.PhoneNumber))
+                if (!string.IsNullOrEmpty(request.Profile.CovidPass))
                 {
                     if (request.Profile.LastInactivityNotificationSendTime == null || request.Profile.LastInactivityNotificationSendTime.Value.AddDays(1) < DateTime.UtcNow)
                     {
                         try
                         {
-                            await messagingService.SendMessageAsync(request.Message, request.Profile.PhoneNumber, cancellationToken);
+                            await messagingService.SendMessageAsync(request.Message, request.Profile.CovidPass, cancellationToken);
 
-                            log.LogInformation("Inactivity SMS message send", new { phoneNumber = request.Profile.PhoneNumber, type = "INACTIVITY_SMS_SEND"});
+                            log.LogInformation("Inactivity SMS message send", new { covidPass = request.Profile.CovidPass, type = "INACTIVITY_SMS_SEND"});
 
                             request.Profile.SetInactivityNotificationSendTime(DateTime.UtcNow);
                             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
