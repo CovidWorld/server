@@ -24,37 +24,7 @@ namespace Sygic.Corona.Application.Commands
         }
         public async Task<SendMfaTokenResponse> Handle(SendMfaTokenCommand request, CancellationToken cancellationToken)
         {
-            var profile = await repository.GetProfileAsync(request.ProfileId, request.DeviceId, cancellationToken);
-
-            if (profile == null)
-            {
-                throw new DomainException("Profile not found.");
-            }
-
-            if (string.IsNullOrEmpty(profile.PhoneNumber))
-            {
-                throw new DomainException("Phone number not found on profile. Update phone number.");
-            }
-
-            try
-            {
-                string message = $"Vas Secure kod: {profile.AuthToken}. Covid-19 App";
-                await messagingService.SendMessageAsync(message, profile.PhoneNumber, cancellationToken);
-                log.LogInformation("Verification SMS message send", new { phoneNumber = profile.PhoneNumber, type = "VERIFICATION_SMS_SEND" });
-            }
-            catch (Twilio.Exceptions.ApiException ex)
-            {
-                log.LogError(new EventId((int) profile.Id), ex, "sms API exception");
-                throw new DomainException("Phone number is iw wrong format or region is unsupported.");
-            }
-            catch (Exception ex)
-            {
-                log.LogError(new EventId((int)profile.Id), ex, "sms API exception");
-                throw;
-            }
-            
-
-            return new SendMfaTokenResponse();
+            throw new NotImplementedException();
         }
     }
 }
