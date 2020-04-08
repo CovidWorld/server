@@ -88,6 +88,12 @@ namespace Sygic.Corona.Domain
             QuarantineEnd = to;
         }
 
+        public void UpdateQuarantine(DateTime start, DateTime end)
+        {
+            QuarantineBeginning = start;
+            QuarantineEnd = end;
+        }
+
         public void SetInactivityNotificationSendTime(DateTime time)
         {
             LastInactivityNotificationSendTime = time;

@@ -54,6 +54,11 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return context.Profiles.SingleOrDefaultAsync(x => x.DeviceId == deviceId, cancellationToken);
         }
 
+        public async Task<Profile> GetProfileByCovidPassAsync(string covidPass, CancellationToken cancellationToken)
+        {
+            return await context.Profiles.SingleOrDefaultAsync(x => x.CovidPass == covidPass, cancellationToken);
+        }
+
         public async Task<uint> GetLastIdAsync(CancellationToken cancellationToken)
         {
             var profilesIds = await context.Profiles.AsNoTracking()
