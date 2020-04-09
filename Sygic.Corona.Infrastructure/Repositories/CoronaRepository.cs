@@ -168,29 +168,35 @@ namespace Sygic.Corona.Infrastructure.Repositories
             context.Locations.RemoveRange(locations);
         }
 
-        public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(DateTime? from, CancellationToken cancellationToken)
         {
             var now = DateTime.UtcNow;
             var profiles = await context.Profiles
                 .AsNoTracking()
-                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
-                .Select(x => new {x.Id, x.DeviceId, x.CovidPass, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
+                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now && x.QuarantineBeginning >= from)
+                .Select(x => new {x.Id, x.CovidPass, x.CreatedOn, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
                 .ToListAsync(cancellationToken);
 
             var response = profiles.Select(x => new GetQuarantineListResponse
             {
                 Id = x.Id,
-                DeviceId = x.DeviceId,
-                QuarantineBeginning = x.QuarantineBeginning,
-                QuarantineEnd = x.QuarantineEnd,
-                LastPositionReportTime = x.LastPositionReportTime,
-                AreaExit = x.AreaExit != null ? new AreaExitResponse
+                CovidPass = x.CovidPass,
+                CreatedOn = x.CreatedOn,
+                Quarantine = new QuarantineResponse
                 {
-                    Accuracy = x.AreaExit?.Accuracy,
-                    Latitude = x.AreaExit?.Latitude,
-                    Longitude = x.AreaExit?.Longitude,
-                    RecordDate = x.AreaExit?.RecordDateUtc
-
+                    QuarantineBeginning = x.QuarantineBeginning,
+                    QuarantineEnd = x.QuarantineEnd,
+                    QuarantineExit = x.AreaExit != null ? new QuarantineExitResponse
+                    {
+                        Accuracy = x.AreaExit?.Accuracy,
+                        Latitude = x.AreaExit?.Latitude,
+                        Longitude = x.AreaExit?.Longitude,
+                        AreaExitTime = x.AreaExit?.RecordDateUtc
+                    } : null
+                },
+                LastLocation = x.LastPositionReportTime != null ? new LastLocationResponse
+                {
+                    LastReportedTime = x.LastPositionReportTime
                 } : null
             }).ToDictionary(x => x.Id);
 
@@ -206,9 +212,12 @@ namespace Sygic.Corona.Infrastructure.Repositories
                     var profile = response[id];
                     if (profile != null)
                     {
-                        profile.Latitude = lastLocation.Latitude;
-                        profile.Longitude = lastLocation.Longitude;
-                        profile.Accuracy = lastLocation.Accuracy;
+                        if (profile.LastLocation != null)
+                        {
+                            profile.LastLocation.Latitude = lastLocation.Latitude;
+                            profile.LastLocation.Longitude = lastLocation.Longitude;
+                            profile.LastLocation.Accuracy = lastLocation.Accuracy;
+                        }
                     }
                 }
             }

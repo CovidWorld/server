@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -30,23 +33,27 @@ namespace Sygic.Corona.Admin
             ILogger log, 
             CancellationToken cancellationToken)
         {
-            var authHeader = req.Headers.Authorization;
+            var qs = req.RequestUri.ParseQueryString();
 
-            if (authHeader == null)
+            var allKeys = qs.AllKeys;
+
+            if (!allKeys.Contains("apiKey"))
             {
-                log.LogWarning("Missing or invalid authorization header!");
-                return new UnauthorizedResult();
+                return new BadRequestErrorMessageResult("Missing query param: apiKey");
             }
 
-            bool isAuthorized = await authService.ValidateTokenAsync(authHeader.Parameter, cancellationToken);
+            var apiKey = qs["apiKey"];
 
+            bool isAuthorized = apiKey == Environment.GetEnvironmentVariable("NcziApiKey");
+            
             if (!isAuthorized)
             {
                 log.LogWarning("Unauthorized call.");
                 return new UnauthorizedResult();
             }
 
-            var command = new GetQuarantineListQuery();
+            var from = DateTime.Parse(qs["since"]);
+            var command = new GetQuarantineListQuery(from);
             var result = await mediator.Send(command, cancellationToken);
 
             return new OkObjectResult(result);

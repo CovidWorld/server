@@ -18,7 +18,7 @@ namespace Sygic.Corona.Application.Queries
 
         public async Task<IEnumerable<GetQuarantineListResponse>> Handle(GetQuarantineListQuery request, CancellationToken cancellationToken)
         {
-            var profiles = await repository.GetProfilesInQuarantineAsync(cancellationToken);
+            var profiles = await repository.GetProfilesInQuarantineAsync(request.From, cancellationToken);
             return profiles;
         }
     }

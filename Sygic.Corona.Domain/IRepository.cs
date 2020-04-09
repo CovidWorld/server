@@ -25,7 +25,7 @@ namespace Sygic.Corona.Domain
         Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsyncNt(uint profileId, CancellationToken cancellationToken);
-        Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(DateTime? from, CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetRawProfilesInQuarantineAsync(CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken);
         Task<IEnumerable<Location>> GetLocationsForProfileNt(uint profileId, CancellationToken ct);
