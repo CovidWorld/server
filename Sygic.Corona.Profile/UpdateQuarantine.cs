@@ -1,13 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
 using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Contracts.Requests;
@@ -33,6 +34,22 @@ namespace Sygic.Corona.Api
         {
             try
             {
+                var qs = req.Query;
+                
+                if (!qs.ContainsKey("apiKey"))
+                {
+                    return new BadRequestErrorMessageResult("Missing query param: apiKey");
+                }
+
+                var apiKey = qs["apiKey"];
+                bool isAuthorized = apiKey == Environment.GetEnvironmentVariable("NcziApiKey");;
+            
+                if (!isAuthorized)
+                {
+                    log.LogWarning("Unauthorized call.");
+                    return new UnauthorizedResult();
+                }
+
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = System.Text.Json.JsonSerializer.Deserialize<UpdateQuarantineRequest>(requestBody);
 
