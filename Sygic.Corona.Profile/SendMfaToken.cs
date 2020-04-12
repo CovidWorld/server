@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace Sygic.Corona.Api
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<SendMfaTokenRequest>(requestBody);
-                var command = new SendMfaTokenCommand(data.DeviceId, data.ProfileId);
+                var command = new SendMfaTokenCommand(data.DeviceId, data.ProfileId, Environment.GetEnvironmentVariable("MfaTokenMessage"));
                 var result = await mediator.Send(command, cancellationToken);
                 return new OkObjectResult(result);
             }

@@ -24,8 +24,10 @@ namespace Sygic.Corona.Application.Commands
                 if (daysLeft.HasValue)
                 {
                     string days = daysLeft.Value.Days.ToString();
-                    string messageText = 
-                        $"Váš zostávajúci počet dní v karanténe: {days}. Ďakujeme že dodržiavate domácu karanténu. Správajme sa zodpovedne voči blízkym a nášmu okoliu. MV SR";
+                    string messageText = !string.IsNullOrEmpty(request.Message)
+                        ? string.Format(request.Message, days) 
+                        : string.Empty;
+
                     var message = new Notification
                     {
                         Priority = "high",

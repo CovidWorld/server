@@ -7,11 +7,13 @@ namespace Sygic.Corona.Application.Commands
     {
         public string DeviceId { get; }
         public uint ProfileId { get; }
+        public string Message { get; set; }
 
-        public SendMfaTokenCommand(string deviceId, uint profileId)
+        public SendMfaTokenCommand(string deviceId, uint profileId, string message)
         {
             DeviceId = deviceId;
             ProfileId = profileId;
+            Message = message;
         }
     }
 }
