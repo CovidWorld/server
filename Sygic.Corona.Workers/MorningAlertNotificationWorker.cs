@@ -32,7 +32,7 @@ namespace Sygic.Corona.Workers
                     new SendMorningAlertNotificationCommand(
                         profile,
                         Environment.GetEnvironmentVariable("MorningAlertNotificationMessage")
-                            ?? "Staying quarantined is safer for you and the ones you love, stay safe.");
+                            ?? "Staying quarantined is safer for you and for the ones you love, stay safe.");
                 await mediator.Send(notificationCommand, cancellationToken);
             }
         }
