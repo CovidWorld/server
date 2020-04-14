@@ -38,7 +38,9 @@ namespace Sygic.Corona.Application.Commands
 
             try
             {
-                string message = $"Vas Secure kod: {profile.AuthToken}. Covid-19 App";
+                string message = !string.IsNullOrEmpty(request.Message) 
+                    ? string.Format(request.Message, profile.AuthToken)
+                    : string.Empty;
                 await messagingService.SendMessageAsync(message, profile.PhoneNumber, cancellationToken);
                 log.LogInformation("Verification SMS message send", new { phoneNumber = profile.PhoneNumber, type = "VERIFICATION_SMS_SEND" });
             }

@@ -28,7 +28,10 @@ namespace Sygic.Corona.Workers
 
             foreach (var profile in profiles)
             {
-                var notificationCommand = new SendMorningAlertNotificationCommand(profile, "");
+                var notificationCommand =
+                    new SendMorningAlertNotificationCommand(profile,
+                        Environment.GetEnvironmentVariable("MorningAlertNotificationMessage")
+                            ?? "Staying quarantined is safer for you and for the ones you love, stay safe.");
                 await mediator.Send(notificationCommand, cancellationToken);
             }
         }
