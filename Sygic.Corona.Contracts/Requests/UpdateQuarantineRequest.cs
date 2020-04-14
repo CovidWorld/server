@@ -5,7 +5,7 @@ namespace Sygic.Corona.Contracts.Requests
 {
     public class UpdateQuarantineRequest
     {
-        [JsonPropertyName("vCovid19pass")]
+        [JsonPropertyName("vCovid19Pass")]
         public string CovidPass { get; set; }
         [JsonPropertyName("dQuarantineStart")]
         public DateTime QuarantineStart { get; set; }

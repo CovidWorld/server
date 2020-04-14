@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
-using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -17,14 +18,16 @@ namespace Sygic.Corona.Application.Commands
         
         protected override async Task Handle(UpdateQuarantineCommand request, CancellationToken cancellationToken)
         {
-            var profile = await repository.GetProfileByCovidPassAsync(request.CovidPass, cancellationToken);
+            var profiles = await repository.GetProfilesByCovidPassAsync(request.CovidPass, cancellationToken);
 
-            if (profile == null)
+            var profileList = profiles.ToList();
+            if (profileList.Any())
             {
-                throw new DomainException("Profile not found");
+                foreach (var profile in profileList)
+                {
+                    profile.UpdateQuarantine(request.QuarantineStart, request.QuarantineEnd);
+                }
             }
-            
-            profile.UpdateQuarantine(request.QuarantineStart, request.QuarantineEnd);
 
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }

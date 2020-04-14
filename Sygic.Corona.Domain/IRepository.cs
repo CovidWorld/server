@@ -16,7 +16,7 @@ namespace Sygic.Corona.Domain
         Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(string deviceId, CancellationToken cancellationToken);
-        Task<Profile> GetProfileByCovidPassAsync(string covidPass, CancellationToken cancellationToken);
+        Task<IEnumerable<Profile>> GetProfilesByCovidPassAsync(string covidPass, CancellationToken cancellationToken);
         Task<uint> GetLastIdAsync(CancellationToken cancellationToken);
         Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken);
         Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
