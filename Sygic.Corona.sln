@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Admin", "Sygic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Infrastructure.Tests", "Sygic.Corona.Infrastructure.Tests\Sygic.Corona.Infrastructure.Tests.csproj", "{31B9CCFB-BD57-4774-8247-F17229090CB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.Application.Tests", "Sygic.Corona.Application.Tests\Sygic.Corona.Application.Tests.csproj", "{BC765BF1-3195-4CAE-BA9E-877445EFB86A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{31B9CCFB-BD57-4774-8247-F17229090CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31B9CCFB-BD57-4774-8247-F17229090CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31B9CCFB-BD57-4774-8247-F17229090CB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC765BF1-3195-4CAE-BA9E-877445EFB86A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC765BF1-3195-4CAE-BA9E-877445EFB86A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC765BF1-3195-4CAE-BA9E-877445EFB86A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC765BF1-3195-4CAE-BA9E-877445EFB86A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
