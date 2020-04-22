@@ -32,5 +32,12 @@ namespace Sygic.Corona.Domain
             Accuracy = accuracy;
         }
 
+        public void ClearLocation()
+        {
+            Latitude = null;
+            Longitude = null;
+            Accuracy = null;
+        }
+
     }
 }
