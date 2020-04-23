@@ -123,6 +123,24 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<IEnumerable<Alert>> GetAlertsForProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken)
+        {
+            return await context.Alerts
+                .AsNoTracking()
+                .Where(x => x.ProfileId == profileId && x.DeviceId == deviceId)
+                .OrderByDescending(x => x.CreatedOn)
+                .ToListAsync(cancellationToken);
+        }
+
+        public IQueryable<Alert> GetAlertsForProfileNt(uint profileId, string deviceId)
+        {
+            return context.Alerts
+                .AsNoTracking()
+                .Where(x => x.ProfileId == profileId && x.DeviceId == deviceId)
+                .OrderByDescending(x => x.CreatedOn)
+                .AsQueryable();
+        }
+
         public async Task<IEnumerable<Location>> GetLocationsForProfileNt(uint profileId, CancellationToken ct)
         {
             var locations = await context.Locations

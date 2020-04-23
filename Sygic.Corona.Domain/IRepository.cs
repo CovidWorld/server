@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Sygic.Corona.Contracts.Responses;
@@ -25,6 +26,8 @@ namespace Sygic.Corona.Domain
         Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken);
         Task<IEnumerable<Contact>> GetContactsForProfileAsyncNt(uint profileId, CancellationToken cancellationToken);
+        Task<IEnumerable<Alert>> GetAlertsForProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken);
+        IQueryable<Alert> GetAlertsForProfileNt(uint profileId, string deviceId);
         Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(DateTime? from, CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetRawProfilesInQuarantineAsync(CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetInactiveUsersInQuarantineAsync(DateTime from, CancellationToken cancellationToken);

@@ -40,6 +40,7 @@ namespace Sygic.Corona.Api
 
             builder.Services.AddScoped<ValidationProcessor>();
             builder.Services.AddTransient(typeof(IValidator<CreateProfileCommand>), typeof(CreateProfileCommandValidator));
+            builder.Services.AddTransient(typeof(IValidator<CreateAlertCommand>), typeof(CreateAlertCommandValidator));
             //builder.Services.AddTransient(typeof(IValidator), typeof(AddContactsCommandValidator));
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
             builder.Services.AddScoped<IRepository, CoronaRepository>();

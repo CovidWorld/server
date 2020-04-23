@@ -28,6 +28,11 @@ namespace Sygic.Corona.Infrastructure.Configurations
                 .WithOne()
                 .HasForeignKey(x => x.ProfileId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(b => b.Alerts)
+                .WithOne()
+                .HasForeignKey(x => x.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
