@@ -21,8 +21,13 @@ namespace Sygic.Corona.Infrastructure.Configurations
 
             builder.OwnsOne(x => x.AreaExit, n => { n.WithOwner(); });
 
-            var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            //var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
+            //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.HasMany(b => b.Contacts)
+                .WithOne()
+                .HasForeignKey(x => x.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(b => b.Locations)
                 .WithOne()

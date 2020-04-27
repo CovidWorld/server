@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
@@ -24,15 +25,11 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
 
-            foreach (var contactRequest in request.Contacts)
-            {
-                var contact = new Contact(profile.Id, profile.DeviceId, contactRequest.SeenProfileId,
-                    contactRequest.Timestamp, contactRequest.Duration, contactRequest.Latitude, contactRequest.Longitude, contactRequest.Accuracy);
+            var contacts = request.Contacts
+                .Select(x => new Contact(profile.Id, profile.DeviceId, x.SeenProfileId, x.Timestamp, x.Duration))
+                .ToList();
 
-                //profile.AddContact(contact.SeenDeviceId, contact.Timestamp, contact.Duration, contact.Location);
-                await repository.CreateContactAsync(contact, cancellationToken);
-            }
-
+            profile.AddContact(contacts);
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

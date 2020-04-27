@@ -50,10 +50,9 @@ namespace Sygic.Corona.Domain
             IsVerified = false;
         }
 
-        public void AddContact(uint seenProfileId, int timestamp, TimeSpan duration, double? latitude, double? longitude, int? accuracy)
+        public void AddContact(IEnumerable<Contact> contactsList)
         {
-            var contact = new Contact(Id, DeviceId, seenProfileId, timestamp, duration, latitude, longitude, accuracy);
-            contacts.Add(contact);
+            contacts.AddRange(contactsList);
         }
 
         public void AddLocations(IEnumerable<Location> locationsList)

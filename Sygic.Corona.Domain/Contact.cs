@@ -14,22 +14,13 @@ namespace Sygic.Corona.Domain
         public double? Longitude { get; private set; }
         public double? Accuracy { get; private set; }
 
-        protected Contact()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public Contact(uint profileId, string sourceDeviceId, uint seenProfileId, int timestamp, TimeSpan? duration, double? latitude, double? longitude, double? accuracy)
-            : this()
+        public Contact(uint profileId, string sourceDeviceId, uint seenProfileId, int timestamp, TimeSpan? duration)
         {
             ProfileId = profileId;
             SourceDeviceId = sourceDeviceId;
             SeenProfileId = seenProfileId;
             Timestamp = timestamp;
             Duration = duration;
-            Latitude = latitude;
-            Longitude = longitude;
-            Accuracy = accuracy;
         }
 
         public void ClearLocation()

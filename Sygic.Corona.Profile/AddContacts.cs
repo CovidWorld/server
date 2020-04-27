@@ -39,7 +39,7 @@ namespace Sygic.Corona.Api
             try
             {
                 var command = new AddContactsCommand(data.SourceDeviceId, data.SourceProfileId, data.Connections);
-                var result = await mediator.Send(command, cancellationToken);
+                await mediator.Send(command, cancellationToken);
                 return new OkResult();
 
             }
