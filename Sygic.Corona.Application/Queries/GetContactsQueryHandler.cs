@@ -15,6 +15,7 @@ namespace Sygic.Corona.Application.Queries
         {
             this.repository = repository;
         }
+
         public async Task<GetContactsResponse> Handle(GetContactsQuery request, CancellationToken cancellationToken)
         {
             var contacts = await repository.GetContactsForProfileAsync(request.ProfileId, cancellationToken);
@@ -25,7 +26,7 @@ namespace Sygic.Corona.Application.Queries
                 SourceDeviceId = x.SourceDeviceId,
                 SeenProfileId = x.SeenProfileId,
                 Duration = x.Duration,
-                Timestamp = x.Timestamp
+                CreatedOn = x.CreatedOn
             }));
 
             return result;

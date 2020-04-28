@@ -169,10 +169,10 @@ namespace Sygic.Corona.Infrastructure.Repositories
         /// <param name="interval">epoch timestamp</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task DeleteContactsAsync(int interval, CancellationToken cancellationToken)
+        public async Task DeleteContactsAsync(DateTime interval, CancellationToken cancellationToken)
         {
             var contacts = await context.Contacts
-                .Where(x => x.Timestamp < interval)
+                .Where(x => x.CreatedOn < interval)
                 .ToListAsync(cancellationToken);
 
             context.Contacts.RemoveRange(contacts);

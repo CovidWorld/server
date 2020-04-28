@@ -22,5 +22,21 @@ namespace Sygic.Corona.Application.Tests.IntegrationTests
             var mediator = provider.GetService<IMediator>();
             await mediator.Send(command, default);
         }
+
+        [Fact]
+        public async Task ConvertContactsTimestampToDate()
+        {
+            var command = new ConvertContactsTimestampCommand();
+            var mediator = provider.GetService<IMediator>();
+            await mediator.Send(command, default);
+        }
+
+        [Fact]
+        public async Task DeleteOldContacts()
+        {
+            var command = new DeleteOldContactsCommand(TimeSpan.FromDays(21));
+            var mediator = provider.GetService<IMediator>();
+            await mediator.Send(command, default);
+        }
     }
 }

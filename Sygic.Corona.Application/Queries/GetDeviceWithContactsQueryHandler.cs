@@ -15,6 +15,7 @@ namespace Sygic.Corona.Application.Queries
         {
             this.repository = repository;
         }
+
         public async Task<GetDeviceWithContactsResponse> Handle(
             GetDeviceWithContactsQuery q, 
             CancellationToken ct)
@@ -42,7 +43,7 @@ namespace Sygic.Corona.Application.Queries
                     SourceDeviceId = x.SourceDeviceId,
                     SeenProfileId = x.SeenProfileId,
                     Duration = x.Duration,
-                    Timestamp = x.Timestamp,
+                    CreatedOn = x.CreatedOn,
                     Location = new ContactLocationResponse
                     {
                         Latitude = x.Latitude,

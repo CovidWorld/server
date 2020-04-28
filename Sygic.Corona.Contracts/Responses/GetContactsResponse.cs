@@ -18,7 +18,7 @@ namespace Sygic.Corona.Contracts.Responses
         public uint ProfileId { get; set; }
         public string SourceDeviceId { get; set; }
         public uint SeenProfileId { get; set; }
-        public int Timestamp { get; set; }
+        public DateTime? CreatedOn { get; set; }
         public TimeSpan? Duration { get; set; }
         public ContactLocationResponse Location { get; set; }
     }
