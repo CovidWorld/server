@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,25 +31,43 @@ namespace Sygic.Corona.Api
         [FunctionName("AddContacts")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log, CancellationToken cancellationToken)
+            ILogger log, IDictionary<string, string> headers, CancellationToken cancellationToken)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<CreateContactsRequest>(requestBody);
+            var requestedVersion = ResolveVersion(headers);
 
-            try
+            if (requestedVersion == "2.0")
             {
-                var command = new AddContactsCommand(data.SourceDeviceId, data.SourceProfileId, data.Connections);
-                await mediator.Send(command, cancellationToken);
-                return new OkResult();
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var data = JsonConvert.DeserializeObject<CreateContactsRequest>(requestBody);
 
+                try
+                {
+                    var command = new AddContactsCommand(data.SourceDeviceId, data.SourceProfileId, data.Connections);
+                    await mediator.Send(command, cancellationToken);
+                    return new OkResult();
+
+                }
+                catch (DomainException ex)
+                {
+                    var errors = validation.ProcessErrors(ex);
+                    return new BadRequestObjectResult(errors);
+                }
             }
-            catch (DomainException ex)
+
+            return new NoContentResult();
+        }
+
+        private static string ResolveVersion(IDictionary<string, string> headers)
+        {
+            if (!headers.TryGetValue("Accept-Version", out string acceptHeader)) return null;
+            if (acceptHeader.Equals("2.0", StringComparison.InvariantCultureIgnoreCase))
             {
-                var errors = validation.ProcessErrors(ex);
-                return new BadRequestObjectResult(errors);
+                return "2.0";
             }
+
+            return null;
         }
     }
 }
