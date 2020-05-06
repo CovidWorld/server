@@ -12,6 +12,7 @@ namespace Sygic.Corona.Infrastructure.Tests
     {
         private HttpClient client;
         private FirebaseCloudMessagingService service;
+        private readonly IConfigurationSection configurationSection;
 
         [SetUp]
         public void Setup()
@@ -21,20 +22,18 @@ namespace Sygic.Corona.Infrastructure.Tests
                 .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true);
             var configuration = builder.Build();
 
-            var values = configuration.GetSection("Values");
+            var configurationSection = configuration.GetSection("Values");
 
-            client = new HttpClient { BaseAddress = new Uri(values["FirebaseUrl"]) };
-            client.DefaultRequestHeaders.Add("Authorization", $"key = {values["FirebaseServerKey"]}");
-            client.DefaultRequestHeaders.Add("Sender", $"id = {values["FirebaseSenderId"]}");
+            client = new HttpClient { BaseAddress = new Uri(configurationSection["FirebaseUrl"]) };
+            client.DefaultRequestHeaders.Add("Authorization", $"key = {configurationSection["FirebaseServerKey"]}");
+            client.DefaultRequestHeaders.Add("Sender", $"id = {configurationSection["FirebaseSenderId"]}");
             service = new FirebaseCloudMessagingService(client);
         }
 
         [TestCase]
         public async Task SendNotificationToDeviceSuccessfully()
         {
-            var token = "fg0mRwhzS96Lod-w7vxhdU:APA91bHqwmXZAGuCbiJyDI0Hr-XpgsgK_g0PVxBZUueJVGBu15elgIqSCUctbdXew8O0-08rqI6Tk74Aabcofd3_zkzM3JHTmzrAbd98T_RKxABfonVkedy5AiZ_uweiNFBsA_s293QE";
-
-
+            var token = configurationSection["testPushToken"];
             var message = new Notification
             {
                 Priority = "high",
@@ -44,12 +43,12 @@ namespace Sygic.Corona.Infrastructure.Tests
                 },
                 NotificationContent = new NotificationContent
                 {
-                    Title = "",
-                    Body = "Test Message",
+                    Title = " ---- TEST -----",
+                    Body = "test",
                     Sound = "default"
-                },
-                ContentAvailable = true
+                }
             };
+
             var result = await service.SendMessageToDevice(token, message, default);
         }
     }
