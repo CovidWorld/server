@@ -5,7 +5,7 @@ namespace Sygic.Corona.Domain
 {
     public class Profile //Entity
     {
-        public uint Id { get; private set; }
+        public long Id { get; private set; }
         public string DeviceId { get; private set; }
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
@@ -38,9 +38,8 @@ namespace Sygic.Corona.Domain
             alerts = new List<Alert>();
             CreatedOn = DateTime.UtcNow;
         }
-        public Profile(uint id, string deviceId, string pushToken, string locale, string authToken) : this()
+        public Profile(string deviceId, string pushToken, string locale, string authToken) : this()
         {
-            Id = id;
             DeviceId = deviceId;
             PushToken = pushToken;
             Locale = locale;

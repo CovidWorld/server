@@ -10,7 +10,7 @@ namespace Sygic.Corona.Infrastructure.Services.HashIdGenerating
         {
             this.hashGenerator = hashGenerator;
         }
-        public string Generate(uint id)
+        public string Generate(long id)
         {
             return hashGenerator.EncodeLong(id);
         }

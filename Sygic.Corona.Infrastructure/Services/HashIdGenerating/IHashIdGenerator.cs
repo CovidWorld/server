@@ -2,6 +2,6 @@
 {
     public interface IHashIdGenerator
     {
-        string Generate(uint id);
+        string Generate(long id);
     }
 }

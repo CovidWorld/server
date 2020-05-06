@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Sygic.Corona.Domain;
 
 namespace Sygic.Corona.Infrastructure.Configurations
@@ -8,13 +10,8 @@ namespace Sygic.Corona.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Profile> builder)
         {
-            builder.Property(x => x.Id)
-                .ToJsonProperty("ProfileId")
-                .HasConversion(x => x.ToString(), x => uint.Parse(x));
-
             builder.HasKey(x => x.Id);
-            builder.HasPartitionKey(x => x.Id);
-            
+
             builder.Property(x => x.DeviceId).IsRequired();
             builder.Property(x => x.Locale).IsRequired();
             builder.Property(x => x.PushToken).IsRequired(false);

@@ -5,7 +5,7 @@ namespace Sygic.Corona.Domain
     public class Location //Entity
     {
         public Guid Id { get; set; }
-        public uint ProfileId { get; set; }
+        public long ProfileId { get; set; }
         public double? Latitude { get; private set; }
         public double? Longitude { get; private set; }
         public double? Accuracy { get; private set; }

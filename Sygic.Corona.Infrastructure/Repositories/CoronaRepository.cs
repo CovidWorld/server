@@ -36,13 +36,13 @@ namespace Sygic.Corona.Infrastructure.Repositories
             await context.Locations.AddAsync(location, cancellationToken);
         }
 
-        public Task<Profile> GetProfileAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public Task<Profile> GetProfileAsync(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             return context.Profiles.SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId,
                 cancellationToken);
         }
 
-        public Task<Profile> GetProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public Task<Profile> GetProfileAsyncNt(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             return context.Profiles
                 .AsNoTracking()
@@ -60,15 +60,6 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<uint> GetLastIdAsync(CancellationToken cancellationToken)
-        {
-            var profilesIds = await context.Profiles.AsNoTracking()
-                .Select(x => x.Id)
-                .ToListAsync(cancellationToken);
-            uint lastId = profilesIds.Max();
-            return lastId;
-        }
-
         public async Task<bool> AlreadyCreatedAsync(string deviceId, CancellationToken cancellationToken)
         {
             var profile = await context.Profiles.FirstOrDefaultAsync(x => x.DeviceId == deviceId, cancellationToken);
@@ -76,14 +67,14 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return profile != null;
         }
 
-        public async Task<string> GetProfilePushTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public async Task<string> GetProfilePushTokenAsync(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             var result = await context.Profiles.Select(x => new {x.Id, x.DeviceId, x.PushToken})
                 .SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId, cancellationToken);
             return result.PushToken;
         }
 
-        public async Task<string> GetProfilePushTokenAsync(uint profileId, CancellationToken cancellationToken)
+        public async Task<string> GetProfilePushTokenAsync(long profileId, CancellationToken cancellationToken)
         {
             var result = await context.Profiles.Where(x => x.Id == profileId)
                 .Select(x => new { x.PushToken })
@@ -92,7 +83,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return result.PushToken;
         }
 
-        public async Task<string> GetProfileMfaTokenAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public async Task<string> GetProfileMfaTokenAsync(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             var result = await context.Profiles.Where(x => x.Id == profileId && x.DeviceId == deviceId)
                 .Select(x => new { x.AuthToken })
@@ -101,7 +92,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return result.AuthToken;
         }
 
-        public async Task<bool> GetProfileInfectionStatusAsync(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public async Task<bool> GetProfileInfectionStatusAsync(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             bool status = await context.Profiles.Where(x => x.Id == profileId && x.DeviceId == deviceId)
                 .Select(x => x.ConfirmedInfection).SingleOrDefaultAsync(cancellationToken);
@@ -109,13 +100,13 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return status;
         }
 
-        public async Task<IEnumerable<Contact>> GetContactsForProfileAsync(uint profileId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Contact>> GetContactsForProfileAsync(long profileId, CancellationToken cancellationToken)
         {
             return await context.Contacts.Where(x => x.SeenProfileId == profileId)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Contact>> GetContactsForProfileAsyncNt(uint profileId, CancellationToken ct)
+        public async Task<IEnumerable<Contact>> GetContactsForProfileAsyncNt(long profileId, CancellationToken ct)
         {
             return await context.Contacts
                 .AsNoTracking()
@@ -123,7 +114,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .ToListAsync(ct);
         }
 
-        public async Task<IEnumerable<Alert>> GetAlertsForProfileAsyncNt(uint profileId, string deviceId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Alert>> GetAlertsForProfileAsyncNt(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             return await context.Alerts
                 .AsNoTracking()
@@ -132,7 +123,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public IQueryable<Alert> GetAlertsForProfileNt(uint profileId, string deviceId)
+        public IQueryable<Alert> GetAlertsForProfileNt(long profileId, string deviceId)
         {
             return context.Alerts
                 .AsNoTracking()
@@ -141,7 +132,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 .AsQueryable();
         }
 
-        public async Task<IEnumerable<Location>> GetLocationsForProfileNt(uint profileId, CancellationToken ct)
+        public async Task<IEnumerable<Location>> GetLocationsForProfileNt(long profileId, CancellationToken ct)
         {
             var locations = await context.Locations
                 .AsNoTracking()
@@ -152,7 +143,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
             return locations;
         }
 
-        public async Task<Location> GetLastLocationForProfileNt(uint profileId, CancellationToken ct)
+        public async Task<Location> GetLastLocationForProfileNt(long profileId, CancellationToken ct)
         {
             var locations = await context.Locations
                 .AsNoTracking()
@@ -198,7 +189,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
             var response = profiles.Select(x => new GetQuarantineListResponse
             {
-                Id = x.Id,
+                Id = (uint)x.Id,
                 CovidPass = x.CovidPass,
                 CreatedOn = x.CreatedOn,
                 Quarantine = new QuarantineResponse
