@@ -3,9 +3,11 @@ using HashidsNet;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
+using Sygic.Corona.Infrastructure.Services.CloudStorage;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 
@@ -36,6 +38,10 @@ namespace Sygic.Corona.Infrastructure
                 int.Parse(configuration["MedicalIdHashMinValue"]),
                     configuration["MedicalIdHashAlphabet"]));
             services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
+
+            services.AddSingleton(CloudStorageAccount.Parse(configuration["CloudStorageConnectionString"]));
+            services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
+                new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
 
             return services;
         }

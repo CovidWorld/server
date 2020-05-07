@@ -22,7 +22,6 @@ namespace Sygic.Corona.Infrastructure.Repositories
 
         public async Task CreateProfileAsync(Profile profile, CancellationToken cancellationToken)
         {
-            //await context.Database.EnsureCreatedAsync(cancellationToken);
             await context.Profiles.AddAsync(profile, cancellationToken);
         }
 
