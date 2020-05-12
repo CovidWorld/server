@@ -31,6 +31,11 @@ namespace Sygic.Corona.Infrastructure
                 c.DefaultRequestHeaders.Add("Authorization", $"key = {configuration["FirebaseServerKey"]}");
                 c.DefaultRequestHeaders.Add("Sender", $"id = {configuration["FirebaseSenderId"]}");
             });
+            services.AddHttpClient<IInstanceIdService, FirebaseInstanceIdService>(c =>
+            {
+                c.BaseAddress = new Uri(configuration["FirebaseInstanceIdServiceUrl"]);
+                c.DefaultRequestHeaders.Add("Authorization", $"key = {configuration["FirebaseServerKey"]}");
+            });
 
             services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
 
