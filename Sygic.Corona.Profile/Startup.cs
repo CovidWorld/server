@@ -33,10 +33,8 @@ namespace Sygic.Corona.Api
             // inject your dependencies here
             builder.Services.AddLogging();
 
-            builder.Services.AddDbContext<CoronaContext>(o => o.UseCosmos(
-                Environment.GetEnvironmentVariable("CosmosEndpoint"),
-                Environment.GetEnvironmentVariable("CosmosAuthKey"),
-                Environment.GetEnvironmentVariable("CosmosDatabase")));
+            builder.Services.AddDbContext<CoronaContext>(o => 
+                o.UseSqlServer(Environment.GetEnvironmentVariable("SqlDbConnection")));
 
             builder.Services.AddScoped<ValidationProcessor>();
             builder.Services.AddTransient(typeof(IValidator<CreateProfileCommand>), typeof(CreateProfileCommandValidator));

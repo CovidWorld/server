@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
 
@@ -22,6 +25,7 @@ namespace Sygic.Corona.Infrastructure
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Alert> Alerts { get; set; }
+        public virtual DbSet<ExposureKey> ExposureKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +36,23 @@ namespace Sygic.Corona.Infrastructure
             await base.SaveChangesAsync(cancellationToken);
 
             return true;
+        }
+    }
+
+    public class CoronaContextDesignFactory : IDesignTimeDbContextFactory<CoronaContext>
+    {
+        public CoronaContext CreateDbContext(string[] args)
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(Directory.GetCurrentDirectory() + "/../Sygic.Corona.Profile/local.settings.json")
+                .Build();
+            var configurationSection = configuration.GetSection("Values");
+
+            var optionsBuilder = new DbContextOptionsBuilder<CoronaContext>();
+            var connectionString = configurationSection["SqlDbConnection"];
+            optionsBuilder.UseSqlServer(connectionString);
+            return new CoronaContext(optionsBuilder.Options);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class CreateProfileResponse
     {
-        public uint ProfileId { get; set; }
+        public long ProfileId { get; set; }
         public string DeviceId { get; set; }
     }
 }

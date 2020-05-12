@@ -26,10 +26,10 @@ namespace Sygic.Corona.Infrastructure.Tests
             //Arrange
 
             var firstProfile = 
-                new Profile(1, "testDevice1", "testPushToken1", "en-US", "TestAuthToken");
+                new Profile("testDevice1", "testPushToken1", "en-US", "TestAuthToken");
             firstProfile.BeginQuarantine(TimeSpan.FromDays(1));
             var secondProfile = 
-                new Profile(2, "testDevice2", "testPushToken2", "en-US", "TestAuthToken");
+                new Profile("testDevice2", "testPushToken2", "en-US", "TestAuthToken");
             secondProfile.BeginQuarantine(TimeSpan.FromDays(1));
             secondProfile.AddLocations(new List<Location>
             {
@@ -60,7 +60,7 @@ namespace Sygic.Corona.Infrastructure.Tests
             //Arrange
             
             var firstProfile = 
-                new Profile(1, "testDevice1", "testPushToken1", "en-US", "TestAuthToken");
+                new Profile("testDevice1", "testPushToken1", "en-US", "TestAuthToken");
             firstProfile.BeginQuarantine(TimeSpan.FromDays(1));
             
             var profiles = new List<Profile>
@@ -86,10 +86,10 @@ namespace Sygic.Corona.Infrastructure.Tests
             //Arrange
 
             var firstProfile = 
-                new Profile(1, "testDevice1", "testPushToken1", "en-US", "TestAuthToken");
+                new Profile("testDevice1", "testPushToken1", "en-US", "TestAuthToken");
             firstProfile.BeginQuarantine(TimeSpan.FromDays(1));
             var secondProfile = 
-                new Profile(2, "testDevice2", "testPushToken2", "en-US", "TestAuthToken");
+                new Profile("testDevice2", "testPushToken2", "en-US", "TestAuthToken");
             secondProfile.BeginQuarantine(TimeSpan.FromDays(1));
             
             var profiles = new List<Profile>

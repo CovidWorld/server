@@ -5,7 +5,7 @@ namespace Sygic.Corona.Domain
     public class Contact // Entity
     {
         public Guid Id { get; private set; }
-        public uint ProfileId { get; private set; }
+        public long ProfileId { get; private set; }
         public string SourceDeviceId { get; private set; }
         public uint SeenProfileId { get; private set; }
         public DateTime? CreatedOn { get; private set; }
@@ -15,7 +15,7 @@ namespace Sygic.Corona.Domain
         public double? Longitude { get; private set; }
         public double? Accuracy { get; private set; }
 
-        public Contact(uint profileId, string sourceDeviceId, uint seenProfileId, int? timestamp, DateTime? createdOn, TimeSpan? duration)
+        public Contact(long profileId, string sourceDeviceId, uint seenProfileId, int? timestamp, DateTime? createdOn, TimeSpan? duration)
         {
             ProfileId = profileId;
             SourceDeviceId = sourceDeviceId;

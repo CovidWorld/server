@@ -5,7 +5,7 @@ namespace Sygic.Corona.Contracts.Responses
 {
     public class GetDeviceWithContactsResponse
     {
-        public uint Id { get; set; }
+        public long Id { get; set; }
         public string DeviceId { get; set; }
         public string CovidPass { get; set; }
         public DateTime? QuarantineBeginning { get; set; }

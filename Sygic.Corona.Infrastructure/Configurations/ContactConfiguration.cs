@@ -9,9 +9,6 @@ namespace Sygic.Corona.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasPartitionKey(x => x.ProfileId);
-            builder.Property(x => x.ProfileId)
-                .HasConversion(x => x.ToString(), x => uint.Parse(x));
         }
     }
 }
