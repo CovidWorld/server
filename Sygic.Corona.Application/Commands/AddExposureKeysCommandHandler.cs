@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
@@ -22,8 +23,9 @@ namespace Sygic.Corona.Application.Commands
         {
             foreach (var key in request.ExposureKeys)
             {
-                var createdOn = convertService.UnixTimeStampToDateTime(key.RollingStartNumber);
-                var expiration = createdOn.AddMinutes(key.RollingDuration * 10);
+                var now = DateTime.UtcNow;
+                var createdOn = now;
+                var expiration = now.Add(request.ExpirationTime);
                 var exposureKey = new ExposureKey(key.TemporaryExposureKey, key.RollingStartNumber, key.RollingDuration, createdOn, expiration);
                 await context.ExposureKeys.AddAsync(exposureKey, cancellationToken);
             }

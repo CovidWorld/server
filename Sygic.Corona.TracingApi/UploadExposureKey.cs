@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
@@ -20,11 +21,13 @@ namespace Sygic.Corona.TracingApi
     {
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
+        private readonly IConfiguration configuration;
 
-        public UploadExposureKey(IMediator mediator, ValidationProcessor validation)
+        public UploadExposureKey(IMediator mediator, ValidationProcessor validation, IConfiguration configuration)
         {
             this.mediator = mediator;
             this.validation = validation;
+            this.configuration = configuration;
         }
 
         [FunctionName("UploadExposureKey")]
@@ -35,7 +38,10 @@ namespace Sygic.Corona.TracingApi
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<UploadExposureKeyRequest>(requestBody);
 
-            var addCommand = new AddExposureKeysCommand(data.ExposureKeys);
+            var expiration = TimeSpan.TryParse(configuration["ExposureKeysExpiration"], null, out var exposureKeysExpiration)
+                ? exposureKeysExpiration : new TimeSpan(1,0,0,0);
+
+            var addCommand = new AddExposureKeysCommand(data.ExposureKeys, expiration);
             await mediator.Send(addCommand, cancellationToken);
 
             var getCommand = new GetRotatedExposureKeysQuery(DateTime.Parse("2019-01-01"));
