@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 
 namespace Sygic.Corona.Infrastructure.Tests
 {
-    public class RepositoryIntegrationTests
+    public class RepositoryIntegrationTests : TestBase
     {
         private readonly CoronaRepository repository;
         private readonly FirebaseCloudMessagingService pushService;
-        private readonly IConfigurationSection configurationSection;
 
         public RepositoryIntegrationTests()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
-
-            configurationSection = configuration.GetSection("Values");
-
             var contextOption = new DbContextOptionsBuilder<CoronaContext>();
             contextOption.UseCosmos(
                 configurationSection["CosmosEndpoint"],

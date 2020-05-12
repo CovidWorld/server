@@ -3,30 +3,21 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using NUnit.Framework;
 using Sygic.Corona.Infrastructure.Services.CloudStorage;
 
 namespace Sygic.Corona.Infrastructure.Tests
 {
-    public class CloudStorageTests
+    public class CloudStorageTests : TestBase
     {
         private ICloudStorageManager manager;
 
         [SetUp]
         public void Setup()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
-
-            var configurationSection = configuration.GetSection("Values");
-
             var storage = CloudStorageAccount.Parse(configurationSection["CloudStorageConnectionString"]);
             manager = new CloudStorageManager(storage, "testcontainer");
-
         }
 
         [Test]

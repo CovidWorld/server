@@ -1,18 +1,16 @@
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.SmsMessaging;
 
 namespace Sygic.Corona.Infrastructure.Tests
 {
-    public class MinvSmsMessagingServiceTests
+    public class MinvSmsMessagingServiceTests : TestBase
     {
         private HttpClient client;
         private MinvSmsMessagingService service;
@@ -21,17 +19,11 @@ namespace Sygic.Corona.Infrastructure.Tests
         [SetUp]
         public void Setup()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
+            var url = configurationSection["MinvSmsUrl"];
+            var userName = configurationSection["MinvSmsUserName"];
+            var password = configurationSection["MinvSmsPassword"];
 
-            var values = configuration.GetSection("Values");
-            var url = values["MinvSmsUrl"];
-            var userName = values["MinvSmsUserName"];
-            var password = values["MinvSmsPassword"];
-
-            testPhoneNumber = values["MinvSmsTestPhoneNumber"];
+            testPhoneNumber = configurationSection["MinvSmsTestPhoneNumber"];
 
             client = new HttpClient() { BaseAddress = new Uri(url) };
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",

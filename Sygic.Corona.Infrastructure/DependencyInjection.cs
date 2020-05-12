@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure.Repositories;
+using Sygic.Corona.Infrastructure.Services.ClientInfo;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.CloudStorage;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
@@ -42,6 +43,7 @@ namespace Sygic.Corona.Infrastructure
             services.AddSingleton(CloudStorageAccount.Parse(configuration["CloudStorageConnectionString"]));
             services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
+            services.AddSingleton<IClientInfo, ClientInfo>(sp => new ClientInfo(configuration["UserAgentHeaderRegex"]));
 
             return services;
         }
