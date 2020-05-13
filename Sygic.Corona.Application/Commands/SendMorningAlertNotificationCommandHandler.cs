@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,9 +29,9 @@ namespace Sygic.Corona.Application.Commands
                     var message = new Notification
                     {
                         Priority = "high",
-                        Data = new NotificationData
+                        Data = new Dictionary<string, object>
                         {
-                            Type = "MORNING_QUARANTINE_ALERT"
+                            { "type", "MORNING_QUARANTINE_ALERT" }
                         },
                         NotificationContent = new NotificationContent
                         {

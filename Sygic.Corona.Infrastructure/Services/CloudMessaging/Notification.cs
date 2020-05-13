@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Dynamic;
 
 namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
 {
@@ -6,13 +8,8 @@ namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
     {
         [JsonProperty("priority")] public string Priority { get; set; }
         [JsonProperty("content-available")] public bool ContentAvailable { get; set; }
-        [JsonProperty("data")] public NotificationData Data { get; set; }
+        [JsonProperty("data")] public IDictionary<string, object> Data { get; set; }
         [JsonProperty("notification")] public NotificationContent NotificationContent { get; set; }
-    }
-
-    public class NotificationData
-    {
-        [JsonProperty("type")] public string Type { get; set; }
     }
 
     public class NotificationContent

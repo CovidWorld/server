@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -27,9 +28,9 @@ namespace Sygic.Corona.Infrastructure.Tests
             var message = new Notification
             {
                 Priority = "high",
-                Data = new NotificationData
+                Data = new Dictionary<string, object>
                 {
-                    Type = "MORNING_QUARANTINE_ALERT"
+                    { "type", "TEST" }
                 },
                 NotificationContent = new NotificationContent
                 {
