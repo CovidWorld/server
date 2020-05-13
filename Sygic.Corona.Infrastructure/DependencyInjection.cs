@@ -12,6 +12,7 @@ using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.CloudStorage;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
+using Sygic.Corona.Infrastructure.Services.NonceGenerating;
 
 namespace Sygic.Corona.Infrastructure
 {
@@ -51,6 +52,7 @@ namespace Sygic.Corona.Infrastructure
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
             services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
             services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
+            services.AddSingleton<INonceGenerator, NonceGenerator>();
 
             return services;
         }

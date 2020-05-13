@@ -2,6 +2,7 @@
 using FluentAssertions;
 using HashidsNet;
 using NUnit.Framework;
+using Sygic.Corona.Infrastructure.Services.NonceGenerating;
 
 namespace Sygic.Corona.Infrastructure.Tests
 {
@@ -38,5 +39,15 @@ namespace Sygic.Corona.Infrastructure.Tests
             match.Groups["version"].Value.Should().Be(appVersion);
             match.Groups["os"].Value.Should().Be(operationSystem);
         }
+
+        [Test]
+        public void GenerateNonceTest()
+        {
+            var generator = new NonceGenerator();
+            var nonce = generator.Generate();
+
+            nonce.Should().NotBeNullOrEmpty();
+            nonce.Length.Should().Be(44);
+        } 
     }
 }
