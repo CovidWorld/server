@@ -10,6 +10,7 @@ namespace Sygic.Corona.Domain
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
         public AreaExit AreaExit { get; private set; }
+        public ClientInfo ClientInfo { get; set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
         public bool IsInQuarantine { get; private set; }
@@ -118,6 +119,11 @@ namespace Sygic.Corona.Domain
         public void AddAlert(Alert alert)
         {
             alerts.Add(alert);
+        }
+
+        public void AddClientInfo(ClientInfo clientInfo)
+        {
+            ClientInfo = clientInfo;
         }
     }
 }

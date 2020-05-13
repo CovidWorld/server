@@ -48,7 +48,7 @@ namespace Sygic.Corona.Infrastructure
             services.AddSingleton(CloudStorageAccount.Parse(configuration["CloudStorageConnectionString"]));
             services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
-            services.AddSingleton<IClientInfo, ClientInfo>(sp => new ClientInfo(configuration["UserAgentHeaderRegex"]));
+            services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
 
             return services;
         }

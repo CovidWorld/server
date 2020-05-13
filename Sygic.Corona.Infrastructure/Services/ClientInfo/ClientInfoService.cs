@@ -2,11 +2,11 @@
 
 namespace Sygic.Corona.Infrastructure.Services.ClientInfo
 {
-    public class ClientInfo : IClientInfo
+    public class ClientInfoService : IClientInfo
     {
         private readonly string regexExpression;
 
-        public ClientInfo(string regexExpression)
+        public ClientInfoService(string regexExpression)
         {
             this.regexExpression = regexExpression;
         }
