@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure.Repositories;
+using Sygic.Corona.Infrastructure.Services.AndroidAttestation;
 using Sygic.Corona.Infrastructure.Services.ClientInfo;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.CloudStorage;
@@ -49,6 +50,7 @@ namespace Sygic.Corona.Infrastructure
             services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
             services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
+            services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
 
             return services;
         }
