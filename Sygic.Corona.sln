@@ -26,7 +26,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Application.Tests", "Sygic.Corona.Application.Tests\Sygic.Corona.Application.Tests.csproj", "{BC765BF1-3195-4CAE-BA9E-877445EFB86A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.TracingApi", "Sygic.Corona.TracingApi\Sygic.Corona.TracingApi.csproj", "{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.TracingApi", "Sygic.Corona.TracingApi\Sygic.Corona.TracingApi.csproj", "{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.QuarantineApi", "Sygic.Corona.QuarantineApi\Sygic.Corona.QuarantineApi.csproj", "{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,10 @@ Global
 		{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
