@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System;
 
 namespace Sygic.Corona.Application.Commands
 {
@@ -6,18 +7,14 @@ namespace Sygic.Corona.Application.Commands
     {
         public uint ProfileId { get; }
         public string DeviceId { get; }
-        public double Latitude { get; }
-        public double Longitude { get; }
-        public double Accuracy { get; }
+        public int Severity { get; set; }
         public int RecordTimestamp { get; }
 
-        public NotifyAreaExitCommand(uint profileId, string deviceId, double latitude, double longitude, double accuracy, int recordTimestamp)
+        public NotifyAreaExitCommand(uint profileId, string deviceId, int severity, int recordTimestamp)
         {
             ProfileId = profileId;
-            DeviceId = deviceId;
-            Latitude = latitude;
-            Longitude = longitude;
-            Accuracy = accuracy;
+            DeviceId = deviceId ?? throw new ArgumentNullException(nameof(deviceId));
+            Severity = severity;
             RecordTimestamp = recordTimestamp;
         }
     }
