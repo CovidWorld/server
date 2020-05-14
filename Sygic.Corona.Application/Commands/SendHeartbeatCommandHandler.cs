@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Sygic.Corona.Application.Commands
 {
-    public class HeartbeatCommandHandler : AsyncRequestHandler<HeartbeatCommand>
+    public class SendHeartbeatCommandHandler : AsyncRequestHandler<SendHeartbeatCommand>
     {
         private readonly CoronaContext context;
         private readonly IRepository repository;
 
-        public HeartbeatCommandHandler(CoronaContext context, IRepository repository)
+        public SendHeartbeatCommandHandler(CoronaContext context, IRepository repository)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        protected override async Task Handle(HeartbeatCommand request, CancellationToken cancellationToken)
+        protected override async Task Handle(SendHeartbeatCommand request, CancellationToken cancellationToken)
         {
             var profile = await repository.GetProfileAsync(request.ProfileId, request.DeviceId, request.CovidPass, cancellationToken);
             if (profile == null)

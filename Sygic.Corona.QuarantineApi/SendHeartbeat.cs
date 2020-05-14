@@ -18,20 +18,20 @@ using Sygic.Corona.Infrastructure.Services.Authorization;
 
 namespace Sygic.Corona.QuarantineApi
 {
-    public class Heartbeat
+    public class SendHeartbeat
     {
         private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public Heartbeat(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public SendHeartbeat(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
         {
             this.verification = verification;
             this.mediator = mediator;
             this.validation = validation;
         }
 
-        [FunctionName("Heartbeat")]
+        [FunctionName("SendHeartbeat")]
         public async Task<IActionResult> RunAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "heartbeat")] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
@@ -52,12 +52,11 @@ namespace Sygic.Corona.QuarantineApi
                 }
 
                 var data = JsonConvert.DeserializeObject<HeartbeatRequest>(requestBody);
-                var generateNonceCommand = new HeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass);
+                var command = new SendHeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass);
                 
-                await mediator.Send(generateNonceCommand, cancellationToken);
+                await mediator.Send(command, cancellationToken);
 
                 return new OkResult();
-
             }
             catch (DomainException ex)
             {

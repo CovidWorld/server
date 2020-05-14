@@ -4,9 +4,9 @@ using System;
 
 namespace Sygic.Corona.Application.Commands
 {
-    public class HeartbeatCommand : IRequest
+    public class SendHeartbeatCommand : IRequest
     {
-        public HeartbeatCommand(string deviceId, uint profileId, string covidPass)
+        public SendHeartbeatCommand(string deviceId, uint profileId, string covidPass)
         {
             DeviceId = deviceId ?? throw new ArgumentNullException(nameof(deviceId));
             ProfileId = profileId;
