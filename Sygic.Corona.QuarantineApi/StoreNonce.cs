@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
+using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Contracts.Requests;
+using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 
@@ -55,8 +57,14 @@ namespace Sygic.Corona.QuarantineApi
                 var command = new StoreNonceCommand(data.CovidPass);
                 
                 await mediator.Send(command, cancellationToken);
+                
+                var query = new RetrieveNonceQuery(data.CovidPass);
+                var nonceEntry = await mediator.Send(query, cancellationToken);
 
-                return new OkResult();
+                return new OkObjectResult(new StoreNonceResponse
+                {
+                    Nonce = nonceEntry.Nonce
+                });
             }
             catch (DomainException ex)
             {

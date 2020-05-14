@@ -6,12 +6,12 @@ using Sygic.Corona.Infrastructure.Services.NonceGenerating;
 
 namespace Sygic.Corona.Application.Queries
 {
-    public class RetrieveNonceCommandHandler : RequestHandler<RetrieveNonceQuery, CovidPassNonceCacheEntry>
+    public class RetrieveNonceQueryHandler : RequestHandler<RetrieveNonceQuery, CovidPassNonceCacheEntry>
     {
         private readonly IMemoryCache memoryCache;
         private readonly INonceGenerator nonceGenerator;
 
-        public RetrieveNonceCommandHandler(IMemoryCache memoryCache)
+        public RetrieveNonceQueryHandler(IMemoryCache memoryCache)
         {
             this.memoryCache = memoryCache;
         }
