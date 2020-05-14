@@ -7,10 +7,15 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200507150140_AddDateTimesToEposureKey.cs" />
     <Compile Remove="Migrations\20200507150140_AddDateTimesToEposureKey.Designer.cs" />
+    <Compile Remove="Migrations\20200514101204_AddPushNonce.cs" />
+    <Compile Remove="Migrations\20200514101204_AddPushNonce.Designer.cs" />
+    <Compile Remove="Migrations\20200514101540_AddPushNonce.cs" />
+    <Compile Remove="Migrations\20200514101540_AddPushNonce.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AzureAutoNumber" Version="1.0.0" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.6" />
     <PackageReference Include="Hashids.net" Version="1.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="3.1.3" />

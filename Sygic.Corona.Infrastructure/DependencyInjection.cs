@@ -7,6 +7,7 @@ using Microsoft.WindowsAzure.Storage;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Infrastructure.Repositories;
 using Sygic.Corona.Infrastructure.Services.AndroidAttestation;
+using Sygic.Corona.Infrastructure.Services.Authorization;
 using Sygic.Corona.Infrastructure.Services.ClientInfo;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.CloudStorage;
@@ -53,6 +54,7 @@ namespace Sygic.Corona.Infrastructure
             services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
             services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
             services.AddSingleton<INonceGenerator, NonceGenerator>();
+            services.AddSingleton<ISignVerification, SignVerificationService>();
 
             return services;
         }
