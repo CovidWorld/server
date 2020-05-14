@@ -11,6 +11,7 @@ namespace Sygic.Corona.Domain
         public string Locale { get; private set; }
         public AreaExit AreaExit { get; private set; }
         public ClientInfo ClientInfo { get; set; }
+        public Address QuarantineAddress { get; private set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
         public bool IsInQuarantine { get; private set; }
@@ -18,6 +19,7 @@ namespace Sygic.Corona.Domain
         public string MedicalId { get; private set; }
         public string CovidPass { get; private set; }
         public DateTime? CreatedOn { get; private set; }
+        public DateTime? BorderCrossedAt { get; private set; }
         public DateTime? QuarantineBeginning { get; private set; }
         public DateTime? QuarantineEnd { get; private set; }
         public DateTime? LastPositionReportTime { get; private set; }
@@ -90,10 +92,12 @@ namespace Sygic.Corona.Domain
             QuarantineEnd = to.ToUniversalTime();
         }
 
-        public void UpdateQuarantine(DateTime start, DateTime end)
+        public void UpdateQuarantine(DateTime start, DateTime end, DateTime borderCrossedAt, Address quarantineAddress)
         {
             QuarantineBeginning = start.ToUniversalTime();
             QuarantineEnd = end.ToUniversalTime();
+            BorderCrossedAt = borderCrossedAt.ToUniversalTime();
+            QuarantineAddress = quarantineAddress;
         }
 
         public void SetInactivityNotificationSendTime(DateTime time)

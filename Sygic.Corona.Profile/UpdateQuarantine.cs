@@ -52,9 +52,7 @@ namespace Sygic.Corona.Api
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = System.Text.Json.JsonSerializer.Deserialize<UpdateQuarantineRequest>(requestBody);
-
-                var command = new UpdateQuarantineCommand(data.CovidPass, data.QuarantineStart, data.QuarantineEnd);
-                await mediator.Send(command, cancellationToken);
+                
                 return new OkResult();
             }
             catch (DomainException ex)
