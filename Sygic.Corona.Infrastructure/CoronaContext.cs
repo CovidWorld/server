@@ -26,6 +26,7 @@ namespace Sygic.Corona.Infrastructure
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Alert> Alerts { get; set; }
         public virtual DbSet<ExposureKey> ExposureKeys { get; set; }
+        public virtual DbSet<PushNonce> PushNonces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
