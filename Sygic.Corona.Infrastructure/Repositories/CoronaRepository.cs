@@ -183,61 +183,63 @@ namespace Sygic.Corona.Infrastructure.Repositories
             context.Locations.RemoveRange(locations);
         }
 
+        //TODO
         public async Task<IEnumerable<GetQuarantineListResponse>> GetProfilesInQuarantineAsync(DateTime? from, CancellationToken cancellationToken)
         {
-            var now = DateTime.UtcNow;
-            var profiles = await context.Profiles
-                .AsNoTracking()
-                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now && x.QuarantineBeginning >= from)
-                .Select(x => new {x.Id, x.CovidPass, x.CreatedOn, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
-                .ToListAsync(cancellationToken);
+            return new List<GetQuarantineListResponse>();
+            //var now = DateTime.UtcNow;
+            //var profiles = await context.Profiles
+            //    .AsNoTracking()
+            //    .Where(x => x.IsInQuarantine && x.QuarantineEnd > now && x.QuarantineBeginning >= from)
+            //    .Select(x => new {x.Id, x.CovidPass, x.CreatedOn, x.LastPositionReportTime, x.QuarantineBeginning, x.QuarantineEnd, x.AreaExit})
+            //    .ToListAsync(cancellationToken);
 
-            var response = profiles.Select(x => new GetQuarantineListResponse
-            {
-                Id = (uint)x.Id,
-                CovidPass = x.CovidPass,
-                CreatedOn = x.CreatedOn,
-                Quarantine = new QuarantineResponse
-                {
-                    QuarantineBeginning = x.QuarantineBeginning,
-                    QuarantineEnd = x.QuarantineEnd,
-                    QuarantineExit = x.AreaExit != null ? new QuarantineExitResponse
-                    {
-                        Accuracy = x.AreaExit?.Accuracy,
-                        Latitude = x.AreaExit?.Latitude,
-                        Longitude = x.AreaExit?.Longitude,
-                        AreaExitTime = x.AreaExit?.RecordDateUtc
-                    } : null
-                },
-                LastLocation = x.LastPositionReportTime != null ? new LastLocationResponse
-                {
-                    LastReportedTime = x.LastPositionReportTime
-                } : null
-            }).ToDictionary(x => x.Id);
+            //var response = profiles.Select(x => new GetQuarantineListResponse
+            //{
+            //    Id = (uint)x.Id,
+            //    CovidPass = x.CovidPass,
+            //    CreatedOn = x.CreatedOn,
+            //    Quarantine = new QuarantineResponse
+            //    {
+            //        QuarantineBeginning = x.QuarantineBeginning,
+            //        QuarantineEnd = x.QuarantineEnd,
+            //        QuarantineExit = x.AreaExit != null ? new QuarantineExitResponse
+            //        {
+            //            Accuracy = x.AreaExit?.Accuracy,
+            //            Latitude = x.AreaExit?.Latitude,
+            //            Longitude = x.AreaExit?.Longitude,
+            //            AreaExitTime = x.AreaExit?.RecordDateUtc
+            //        } : null
+            //    },
+            //    LastLocation = x.LastPositionReportTime != null ? new LastLocationResponse
+            //    {
+            //        LastReportedTime = x.LastPositionReportTime
+            //    } : null
+            //}).ToDictionary(x => x.Id);
 
-            var ids = response.Keys;
-            foreach (uint id in ids)
-            {
-                var lastLocation = await context.Locations.Where(x => x.ProfileId == id)
-                    .Select(x => new {x.Latitude, x.Longitude, x.Accuracy, x.CreatedOn})
-                    .OrderByDescending(x => x.CreatedOn)
-                    .FirstOrDefaultAsync(cancellationToken);
-                if (lastLocation != null)
-                {
-                    var profile = response[id];
-                    if (profile != null)
-                    {
-                        if (profile.LastLocation != null)
-                        {
-                            profile.LastLocation.Latitude = lastLocation.Latitude;
-                            profile.LastLocation.Longitude = lastLocation.Longitude;
-                            profile.LastLocation.Accuracy = lastLocation.Accuracy;
-                        }
-                    }
-                }
-            }
+            //var ids = response.Keys;
+            //foreach (uint id in ids)
+            //{
+            //    var lastLocation = await context.Locations.Where(x => x.ProfileId == id)
+            //        .Select(x => new {x.Latitude, x.Longitude, x.Accuracy, x.CreatedOn})
+            //        .OrderByDescending(x => x.CreatedOn)
+            //        .FirstOrDefaultAsync(cancellationToken);
+            //    if (lastLocation != null)
+            //    {
+            //        var profile = response[id];
+            //        if (profile != null)
+            //        {
+            //            if (profile.LastLocation != null)
+            //            {
+            //                profile.LastLocation.Latitude = lastLocation.Latitude;
+            //                profile.LastLocation.Longitude = lastLocation.Longitude;
+            //                profile.LastLocation.Accuracy = lastLocation.Accuracy;
+            //            }
+            //        }
+            //    }
+            //}
             
-            return response.Select(x => x.Value);
+            //return response.Select(x => x.Value);
         }
 
         public async Task<IEnumerable<Profile>> GetRawProfilesInQuarantineAsync(CancellationToken cancellationToken)

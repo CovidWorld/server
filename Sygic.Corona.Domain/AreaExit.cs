@@ -2,18 +2,17 @@
 
 namespace Sygic.Corona.Domain
 {
-    public class AreaExit
+    public class AreaExit //Entity
     {
-        public double Latitude { get; private set; }
-        public double Longitude { get; private set; }
-        public double Accuracy { get; private set; }
+        public Guid Id { get; private set; }
+        public long ProfileId { get; private set; }
+        public int Severity { get; private set; }
         public DateTime RecordDateUtc { get; private set; }
 
-        public AreaExit(double latitude, double longitude, double accuracy, DateTime recordDateUtc)
+        public AreaExit(long profileId, int severity, DateTime recordDateUtc)
         {
-            Latitude = latitude;
-            Longitude = longitude;
-            Accuracy = accuracy;
+            ProfileId = profileId;
+            Severity = severity;
             RecordDateUtc = recordDateUtc;
         }
     }

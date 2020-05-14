@@ -16,7 +16,6 @@ namespace Sygic.Corona.Infrastructure.Configurations
             builder.Property(x => x.Locale).IsRequired();
             builder.Property(x => x.PushToken).IsRequired(false);
 
-            builder.OwnsOne(x => x.AreaExit, n => { n.WithOwner(); });
             builder.OwnsOne(x => x.ClientInfo, n => { n.WithOwner(); });
             builder.OwnsOne(x => x.QuarantineAddress, n => { n.WithOwner(); });
 
@@ -34,6 +33,11 @@ namespace Sygic.Corona.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(b => b.Alerts)
+                .WithOne()
+                .HasForeignKey(x => x.ProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(b => b.AreaExits)
                 .WithOne()
                 .HasForeignKey(x => x.ProfileId)
                 .OnDelete(DeleteBehavior.Cascade);

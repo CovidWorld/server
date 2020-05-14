@@ -9,7 +9,6 @@ namespace Sygic.Corona.Domain
         public string DeviceId { get; private set; }
         public string PushToken { get; private set; }
         public string Locale { get; private set; }
-        public AreaExit AreaExit { get; private set; }
         public ClientInfo ClientInfo { get; set; }
         public Address QuarantineAddress { get; private set; }
         public string AuthToken { get; private set; }
@@ -34,11 +33,15 @@ namespace Sygic.Corona.Domain
         private readonly List<Alert> alerts;
         public IReadOnlyCollection<Alert> Alerts => alerts;
 
+        private readonly List<AreaExit> areaExits;
+        public IReadOnlyCollection<AreaExit> AreaExits => areaExits;
+
         public Profile()
         {
             contacts = new List<Contact>();
             locations = new List<Location>();
             alerts = new List<Alert>();
+            areaExits = new List<AreaExit>();
             CreatedOn = DateTime.UtcNow;
         }
         public Profile(string deviceId, string pushToken, string locale, string authToken) : this()
@@ -70,7 +73,7 @@ namespace Sygic.Corona.Domain
 
         public void AddAreaExit(AreaExit exit)
         {
-            AreaExit = exit;
+            areaExits.Add(exit);
         }
 
         public void UpdatePushToken(string pushToken)
