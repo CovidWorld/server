@@ -34,7 +34,7 @@ namespace Sygic.Corona.Application.Commands
 
             profile.UpdateLastPositionReportTime(DateTime.UtcNow);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
