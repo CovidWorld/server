@@ -27,6 +27,7 @@ namespace Sygic.Corona.Infrastructure
                     configuration["SqlDbConnection"],
                     b => b.MigrationsAssembly(typeof(CoronaContext).Assembly.FullName)));
 
+            services.AddMemoryCache();
             services.AddScoped<IRepository, CoronaRepository>();
 
             services.AddHttpClient<ICloudMessagingService, FirebaseCloudMessagingService>(c =>
