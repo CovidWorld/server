@@ -31,12 +31,10 @@ namespace Sygic.Corona.Api
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<CreateProfileRequest>(requestBody);
             
-            var command = new CreateProfileCommand(data.DeviceId, data.PushToken,data.Locale, data.Latitude, data.Longitude, data.Accuracy);
+            var command = new CreateProfileCommand(data.DeviceId, data.PushToken,data.Locale);
             try
             {
                 var result = await mediator.Send(command, cancellationToken);
