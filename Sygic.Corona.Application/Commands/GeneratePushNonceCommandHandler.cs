@@ -6,6 +6,7 @@ using Sygic.Corona.Infrastructure;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 using Sygic.Corona.Infrastructure.Services.NonceGenerating;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,16 @@ namespace Sygic.Corona.Application.Commands
         private readonly IRepository repository;
         private readonly INonceGenerator nonceGenerator;
         private readonly IInstanceIdService instanceIdService;
+        private readonly IMediator mediator;
+
+        public GeneratePushNonceCommandHandler(CoronaContext context, IRepository repository, INonceGenerator nonceGenerator, IInstanceIdService instanceIdService, IMediator mediator)
+        {
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.nonceGenerator = nonceGenerator ?? throw new ArgumentNullException(nameof(nonceGenerator));
+            this.instanceIdService = instanceIdService ?? throw new ArgumentNullException(nameof(instanceIdService));
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
 
         public async Task<PushNonce> Handle(GeneratePushNonceCommand request, CancellationToken cancellationToken)
         {
@@ -38,7 +49,6 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Push token is invalid or from wrong platform");
             }
 
-
             var pushNonce = await context.PushNonces.SingleOrDefaultAsync(x => x.Id == profile.PushToken, cancellationToken);
 
             if (pushNonce != null)
@@ -52,6 +62,18 @@ namespace Sygic.Corona.Application.Commands
             }
 
             await context.SaveChangesAsync(cancellationToken);
+
+            var message = new Notification
+            {
+                Data = new Dictionary<string, object>
+                {
+                    { "type", "PUSH_NONCE" },
+                    { "Nonce", pushNonce.Body }
+                },
+                Priority = "high"
+            };
+            var sendNonceCommand = new SendPushNotificationCommand(profile.Id, message);
+            await mediator.Send(sendNonceCommand, cancellationToken);
 
             return pushNonce;
         }

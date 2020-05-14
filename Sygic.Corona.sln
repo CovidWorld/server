@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.Application.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.TracingApi", "Sygic.Corona.TracingApi\Sygic.Corona.TracingApi.csproj", "{D345C4E2-98A1-4DE3-AE6D-6192A082E7B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sygic.Corona.QuarantineApi", "Sygic.Corona.QuarantineApi\Sygic.Corona.QuarantineApi.csproj", "{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sygic.Corona.QuarantineApi", "Sygic.Corona.QuarantineApi\Sygic.Corona.QuarantineApi.csproj", "{80979FC2-8A31-4FA9-BF52-E3FDC6EFAD2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
