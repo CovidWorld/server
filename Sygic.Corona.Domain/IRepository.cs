@@ -15,6 +15,7 @@ namespace Sygic.Corona.Domain
         Task CreateContactAsync(Contact contact, CancellationToken cancellationToken);
         Task CreateLocationAsync(Location location, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(long profileId, string deviceId, CancellationToken cancellationToken);
+        Task<Profile> GetProfileAsync(long profileId, string deviceId, string covidPass, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsyncNt(long profileId, string deviceId, CancellationToken cancellationToken);
         Task<Profile> GetProfileAsync(string deviceId, CancellationToken cancellationToken);
         Task<IEnumerable<Profile>> GetProfilesByCovidPassAsync(string covidPass, CancellationToken cancellationToken);
