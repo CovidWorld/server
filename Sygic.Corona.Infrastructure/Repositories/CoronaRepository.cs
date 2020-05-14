@@ -41,6 +41,12 @@ namespace Sygic.Corona.Infrastructure.Repositories
                 cancellationToken);
         }
 
+        public Task<Profile> GetProfileAsync(long profileId, string deviceId, string covidPass, CancellationToken cancellationToken)
+        {
+            return context.Profiles.SingleOrDefaultAsync(x => x.Id == profileId && x.DeviceId == deviceId && x.CovidPass == covidPass,
+                cancellationToken);
+        }
+
         public Task<Profile> GetProfileAsyncNt(long profileId, string deviceId, CancellationToken cancellationToken)
         {
             return context.Profiles
