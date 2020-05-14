@@ -86,19 +86,19 @@ namespace Sygic.Corona.Domain
         public void BeginQuarantine(DateTime from, DateTime to)
         {
             IsInQuarantine = true;
-            QuarantineBeginning = from;
-            QuarantineEnd = to;
+            QuarantineBeginning = from.ToUniversalTime();
+            QuarantineEnd = to.ToUniversalTime();
         }
 
         public void UpdateQuarantine(DateTime start, DateTime end)
         {
-            QuarantineBeginning = start;
-            QuarantineEnd = end;
+            QuarantineBeginning = start.ToUniversalTime();
+            QuarantineEnd = end.ToUniversalTime();
         }
 
         public void SetInactivityNotificationSendTime(DateTime time)
         {
-            LastInactivityNotificationSendTime = time;
+            LastInactivityNotificationSendTime = time.ToUniversalTime();
         }
 
         public void Verify()
@@ -124,6 +124,11 @@ namespace Sygic.Corona.Domain
         public void AddClientInfo(ClientInfo clientInfo)
         {
             ClientInfo = clientInfo;
+        }
+
+        public void UpdateLastPositionReportTime(DateTime lastPositionReportTime)
+        {
+            LastPositionReportTime = lastPositionReportTime.ToUniversalTime();
         }
     }
 }
