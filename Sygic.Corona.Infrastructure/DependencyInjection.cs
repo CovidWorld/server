@@ -14,6 +14,7 @@ using Sygic.Corona.Infrastructure.Services.CloudStorage;
 using Sygic.Corona.Infrastructure.Services.DateTimeConverting;
 using Sygic.Corona.Infrastructure.Services.HashIdGenerating;
 using Sygic.Corona.Infrastructure.Services.NonceGenerating;
+using Sygic.Corona.Infrastructure.Services.TokenGenerating;
 
 namespace Sygic.Corona.Infrastructure
 {
@@ -47,14 +48,24 @@ namespace Sygic.Corona.Infrastructure
                 int.Parse(configuration["MedicalIdHashMinValue"]),
                     configuration["MedicalIdHashAlphabet"]));
             services.AddSingleton<IHashIdGenerator, HashIdGenerator>();
+            services.AddSingleton<ITokenGenerator, TokenGenerator>(x => new TokenGenerator(configuration["MfaTokenGeneratorSecret"]));
 
             services.AddSingleton(CloudStorageAccount.Parse(configuration["CloudStorageConnectionString"]));
             services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
             services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
-            services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
             services.AddSingleton<INonceGenerator, NonceGenerator>();
-            services.AddSingleton<ISignVerification, SignVerificationService>();
+
+            if (configuration["AZURE_FUNCTIONS_ENVIRONMENT"] == "Development")
+            {
+                services.AddSingleton<ISignVerification, SignVerificationBypass>();
+                services.AddSingleton<IAndroidAttestation, OfflineAttestationBypass>();
+            }
+            else
+            {
+                services.AddSingleton<ISignVerification, SignVerificationService>();
+                services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
+            }       
 
             return services;
         }

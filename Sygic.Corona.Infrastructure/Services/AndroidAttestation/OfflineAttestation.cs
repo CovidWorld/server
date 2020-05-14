@@ -36,7 +36,7 @@ namespace Sygic.Corona.Infrastructure.Services.AndroidAttestation
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = GetEmbeddedKeys(token)
             };
