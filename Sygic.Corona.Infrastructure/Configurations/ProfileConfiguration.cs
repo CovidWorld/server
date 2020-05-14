@@ -18,6 +18,7 @@ namespace Sygic.Corona.Infrastructure.Configurations
 
             builder.OwnsOne(x => x.AreaExit, n => { n.WithOwner(); });
             builder.OwnsOne(x => x.ClientInfo, n => { n.WithOwner(); });
+            builder.OwnsOne(x => x.QuarantineAddress, n => { n.WithOwner(); });
 
             //var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
             //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);

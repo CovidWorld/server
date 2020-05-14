@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
+using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.CloudMessaging;
 
 namespace Sygic.Corona.Application.Commands
@@ -22,39 +23,45 @@ namespace Sygic.Corona.Application.Commands
 
         protected override async Task Handle(UpdateQuarantineCommand request, CancellationToken cancellationToken)
         {
-            var profiles = await repository.GetProfilesByCovidPassAsync(request.CovidPass, cancellationToken);
+            var profiles = (await repository.GetProfilesByCovidPassAsync(request.CovidPass, cancellationToken)).ToList();
 
-            var profileList = profiles.ToList();
-
-            if (profileList.Any())
+            if (!profiles.Any())
             {
-                foreach (var profile in profileList)
-                {
-                    var message = new Notification
-                    {
-                        Priority = "high",
-                        Data = new Dictionary<string, object>
-                        {
-                            { "type", "UPDATE_QUARANTINE_ALERT" },
-                            { "start",  profile.QuarantineBeginning},
-                            { "end", profile.QuarantineEnd }
-                        },
-                        NotificationContent = new NotificationContent
-                        {
-                            Title = "Covid19 ZostanZdravy",
-                            Body = "Doba vasej karanteny sa zmenila, viac informacii najdete v aplikacii",
-                            Sound = "default"
-                        },
-                        ContentAvailable = true
-                    };
+                throw new DomainException($"No profiles found with {nameof(request.CovidPass)}: '{request.CovidPass}'");
+            }
+            
+            foreach (var profile in profiles)
+            {
+                var notification = CreateQuarantineUpdatedNotification(profile);
 
-                    profile.UpdateQuarantine(request.QuarantineStart, request.QuarantineEnd);
-                    var command = new SendPushNotificationCommand(profile.Id, message);
-                    await mediator.Send(command, cancellationToken);
-                }
+                profile.UpdateQuarantine(request.QuarantineStart, request.QuarantineEnd, request.BorderCrossedAt, request.QuarantineAddress);
+                var command = new SendPushNotificationCommand(profile.Id, notification);
+                await mediator.Send(command, cancellationToken);
             }
 
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        private static Notification CreateQuarantineUpdatedNotification(Profile profile)
+        {
+            var message = new Notification
+            {
+                Priority = "high",
+                Data = new Dictionary<string, object>
+                {
+                    {"type", "UPDATE_QUARANTINE_ALERT"},
+                    {"start", profile.QuarantineBeginning},
+                    {"end", profile.QuarantineEnd}
+                },
+                NotificationContent = new NotificationContent
+                {
+                    Title = "Covid19 ZostanZdravy",
+                    Body = "Doba vasej karanteny sa zmenila, viac informacii najdete v aplikacii",
+                    Sound = "default"
+                },
+                ContentAvailable = true
+            };
+            return message;
         }
     }
 }
