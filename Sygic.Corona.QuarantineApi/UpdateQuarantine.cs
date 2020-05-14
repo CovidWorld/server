@@ -39,7 +39,7 @@ namespace Sygic.Corona.QuarantineApi
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Siganture"].ToString().Split(':');
+                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
                 if (signatureHeaderParameters.Length > 2)
                 {
                     return new BadRequestResult();
