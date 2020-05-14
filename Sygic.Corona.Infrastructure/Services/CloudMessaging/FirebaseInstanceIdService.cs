@@ -18,7 +18,10 @@ namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
         {
             var response = await client.GetAsync($"info/{pushToken}", cancellationToken);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
             string responseString = await response.Content.ReadAsStringAsync();
 
             var result = JsonConvert.DeserializeObject<InstanceInfo>(responseString);

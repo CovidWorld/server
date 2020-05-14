@@ -44,6 +44,11 @@ namespace Sygic.Corona.Application.Commands
 
             var instanceInfo = await instanceIdService.GetInstanceInfoAsync(profile.PushToken, cancellationToken);
 
+            if (instanceInfo == null)
+            {
+                throw new DomainException("Push token is invalid");
+            }
+
             if(instanceInfo.Platform != profile.ClientInfo.OperationSystem || instanceInfo.Application != profile.ClientInfo.Name)
             {
                 throw new DomainException("Push token is invalid or from wrong platform");

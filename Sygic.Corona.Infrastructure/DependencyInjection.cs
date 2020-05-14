@@ -35,12 +35,7 @@ namespace Sygic.Corona.Infrastructure
                 c.DefaultRequestHeaders.Add("Authorization", $"key = {configuration["FirebaseServerKey"]}");
                 c.DefaultRequestHeaders.Add("Sender", $"id = {configuration["FirebaseSenderId"]}");
             });
-            services.AddHttpClient<IInstanceIdService, FirebaseInstanceIdService>(c =>
-            {
-                c.BaseAddress = new Uri(configuration["FirebaseInstanceIdServiceUrl"]);
-                c.DefaultRequestHeaders.Add("Authorization", $"key = {configuration["FirebaseServerKey"]}");
-            });
-
+            
             services.AddSingleton<IDateTimeConvertService, DateTimeConvertService>();
 
             services.AddSingleton<IHashids>(x => new Hashids(
@@ -60,12 +55,20 @@ namespace Sygic.Corona.Infrastructure
             {
                 services.AddSingleton<ISignVerification, SignVerificationBypass>();
                 services.AddSingleton<IAndroidAttestation, OfflineAttestationBypass>();
+                services.AddSingleton<IInstanceIdService, InstanceIdBypass>();
             }
             else
             {
                 services.AddSingleton<ISignVerification, SignVerificationService>();
                 services.AddSingleton<IAndroidAttestation, OfflineAttestation>();
-            }       
+
+                services.AddHttpClient<IInstanceIdService, FirebaseInstanceIdService>(c =>
+                {
+                    c.BaseAddress = new Uri(configuration["FirebaseInstanceIdServiceUrl"]);
+                    c.DefaultRequestHeaders.Add("Authorization", $"key = {configuration["FirebaseServerKey"]}");
+                });
+
+            }
 
             return services;
         }
