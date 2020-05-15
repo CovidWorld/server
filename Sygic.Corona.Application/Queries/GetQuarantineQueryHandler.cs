@@ -3,28 +3,26 @@ using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain;
-using Sygic.Corona.Infrastructure;
+using Sygic.Corona.Domain.Common;
 
 namespace Sygic.Corona.Application.Queries
 {
     public class GetQuarantineQueryHandler : IRequestHandler<GetQuarantineQuery, GetQuarantineResponse>
     {
         private readonly IRepository repository;
-        private readonly CoronaContext context;
 
-        public GetQuarantineQueryHandler(IRepository repository, CoronaContext context)
+        public GetQuarantineQueryHandler(IRepository repository)
         {
             this.repository = repository;
-            this.context = context;
         }
 
         public async Task<GetQuarantineResponse> Handle(GetQuarantineQuery request, CancellationToken cancellationToken)
         {
             var profile = await repository.GetProfileAsyncNt(request.ProfileId, request.DeviceId, cancellationToken);
 
-            if (profile?.QuarantineAddress == null)
+            if (profile == null)
             {
-                return null;
+                throw new DomainException("Profile not found");
             }
 
             return new GetQuarantineResponse
@@ -33,7 +31,7 @@ namespace Sygic.Corona.Application.Queries
                 QuarantineStart = profile.QuarantineBeginning.Value,
                 QuarantineEnd = profile.QuarantineEnd.Value,
                 BorderCrossedAt = profile.BorderCrossedAt.Value,
-                Address = new AddressResponse
+                Address = profile.QuarantineAddress != null ? new AddressResponse
                 {
                     Latitude = profile.QuarantineAddress.Latitude,
                     Longitude = profile.QuarantineAddress.Longitude,
@@ -42,7 +40,7 @@ namespace Sygic.Corona.Application.Queries
                     ZipCode = profile.QuarantineAddress.ZipCode,
                     StreetName = profile.QuarantineAddress.StreetName,
                     StreetNumber = profile.QuarantineAddress.StreetNumber,
-                }
+                } : null
             };
         }
     }
