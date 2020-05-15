@@ -2,5 +2,6 @@
 {
     public class GetPresenceCheckResponse
     {
+        public bool IsPresenceCheckPending { get; set; }
     }
 }
