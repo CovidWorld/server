@@ -39,6 +39,7 @@ namespace Sygic.Corona.Application.Commands
             string token = tokenGenerator.Generate();
 
             var profile = new Profile(request.DeviceId, request.PushToken, request.Locale,token);
+            profile.AddClientInfo(new ClientInfo(request.AppName, request.AppIntegrator, request.AppVersion, request.AppOperationSystem));
 
             await repository.CreateProfileAsync(profile, cancellationToken);
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -47,7 +48,6 @@ namespace Sygic.Corona.Application.Commands
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return new CreateProfileResponse{ ProfileId = profile.Id, DeviceId = profile.DeviceId };
-
         }
     }
 }
