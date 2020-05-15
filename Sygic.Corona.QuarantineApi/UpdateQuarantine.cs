@@ -32,14 +32,14 @@ namespace Sygic.Corona.QuarantineApi
         }
 
         [FunctionName("UpdateQuarantine")]
-        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "put", Route = "quarantine")]
+        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "quarantine")]
             HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Siganture"].ToString().Split(':');
+                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
                 if (signatureHeaderParameters.Length > 2)
                 {
                     return new BadRequestResult();

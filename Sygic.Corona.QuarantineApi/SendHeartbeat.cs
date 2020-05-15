@@ -33,13 +33,13 @@ namespace Sygic.Corona.QuarantineApi
 
         [FunctionName("SendHeartbeat")]
         public async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "heartbeat")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "heartbeat")] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Siganture"].ToString().Split(':');
+                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
                 if (signatureHeaderParameters.Length > 2)
                 {
                     return new BadRequestResult();

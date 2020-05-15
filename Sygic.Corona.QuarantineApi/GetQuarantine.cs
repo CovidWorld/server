@@ -29,7 +29,7 @@ namespace Sygic.Corona.QuarantineApi
         }
 
         [FunctionName("GetQuarantine")]
-        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "quarantine")]
+        public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quarantine")]
             HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
