@@ -28,6 +28,7 @@ namespace Sygic.Corona.Infrastructure
         public virtual DbSet<ExposureKey> ExposureKeys { get; set; }
         public virtual DbSet<PushNonce> PushNonces { get; set; }
         public virtual DbSet<AreaExit> AreaExits { get; set; }
+        public virtual DbSet<PresenceCheck> PresenceChecks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

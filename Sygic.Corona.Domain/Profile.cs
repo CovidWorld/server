@@ -37,6 +37,9 @@ namespace Sygic.Corona.Domain
         private readonly List<AreaExit> areaExits;
         public IReadOnlyCollection<AreaExit> AreaExits => areaExits;
 
+        private readonly List<PresenceCheck> presenceChecks;
+        public IReadOnlyCollection<PresenceCheck> PresenceChecks => presenceChecks;
+
         public Profile()
         {
             contacts = new List<Contact>();
@@ -143,6 +146,11 @@ namespace Sygic.Corona.Domain
         public void UpdateLastPositionReportTime(DateTime lastPositionReportTime)
         {
             LastPositionReportTime = lastPositionReportTime.ToUniversalTime();
+        }
+
+        public void AddPresenceCheck(PresenceCheck presenceCheck)
+        {
+            presenceChecks.Add(presenceCheck);
         }
     }
 }
