@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using Sygic.Corona.Contracts.Responses;
 
 namespace Sygic.Corona.Application.Queries
@@ -12,8 +13,8 @@ namespace Sygic.Corona.Application.Queries
         public GetPresenceCheckQuery(uint profileId, string deviceId, string covidPass)
         {
             ProfileId = profileId;
-            DeviceId = deviceId;
-            CovidPass = covidPass;
+            DeviceId = deviceId ?? throw new ArgumentNullException(nameof(deviceId));
+            CovidPass = covidPass ?? throw new ArgumentNullException(nameof(covidPass));
         }
     }
 }
