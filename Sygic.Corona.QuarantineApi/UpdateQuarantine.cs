@@ -37,19 +37,19 @@ namespace Sygic.Corona.QuarantineApi
             {
                 var qs = req.Query;
 
-                // if (!qs.ContainsKey("apiKey"))
-                // {
-                //     return new BadRequestErrorMessageResult("Missing query param: apiKey");
-                // }
-                //
-                // var apiKey = qs["apiKey"];
-                // bool isAuthorized = apiKey == Environment.GetEnvironmentVariable("NcziApiKey");
-                //
-                // if (!isAuthorized)
-                // {
-                //     log.LogWarning("Unauthorized call.");
-                //     return new UnauthorizedResult();
-                // }
+                if (!qs.ContainsKey("apiKey"))
+                {
+                    return new BadRequestErrorMessageResult("Missing query param: apiKey");
+                }
+
+                var apiKey = qs["apiKey"];
+                bool isAuthorized = apiKey == Environment.GetEnvironmentVariable("NcziApiKey");
+
+                if (!isAuthorized)
+                {
+                    log.LogWarning("Unauthorized call.");
+                    return new UnauthorizedResult();
+                }
 
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<UpdateQuarantineRequest>(requestBody);
