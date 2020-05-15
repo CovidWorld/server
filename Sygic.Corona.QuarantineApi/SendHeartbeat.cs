@@ -33,7 +33,7 @@ namespace Sygic.Corona.QuarantineApi
 
         [FunctionName("SendHeartbeat")]
         public async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "heartbeat")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "heartbeat")] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
             try

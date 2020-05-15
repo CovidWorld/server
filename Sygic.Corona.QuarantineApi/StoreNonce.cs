@@ -35,7 +35,7 @@ namespace Sygic.Corona.QuarantineApi
 
         [FunctionName("StoreNonce")]
         public async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "nonce")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "nonce")] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
             try
