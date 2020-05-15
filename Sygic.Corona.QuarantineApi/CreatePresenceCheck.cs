@@ -14,6 +14,7 @@ using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain.Common;
 using Sygic.Corona.QuarantineApi.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace Sygic.Corona.QuarantineApi
 {
@@ -21,11 +22,13 @@ namespace Sygic.Corona.QuarantineApi
     {
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
+        private readonly IConfiguration configuration;
 
-        public CreatePresenceCheck(IMediator mediator, ValidationProcessor validation)
+        public CreatePresenceCheck(IMediator mediator, ValidationProcessor validation, IConfiguration configuration)
         {
             this.mediator = mediator;
             this.validation = validation;
+            this.configuration = configuration;
         }
         
         [FunctionName("CreatePresenceCheck")]
@@ -53,7 +56,7 @@ namespace Sygic.Corona.QuarantineApi
                 
                 var data = await req.DeserializeJsonBody<CreatePresenceCheckRequest>();
 
-                var command = new CreatePresenceCheckCommand(data.CovidPass);
+                var command = new CreatePresenceCheckCommand(data.CovidPass, TimeSpan.Parse(configuration["PresenceCheckDeadLine"]));
                 await mediator.Send(command, cancellationToken);
 
                 return new OkObjectResult(new CreatePresenceCheckResponse());

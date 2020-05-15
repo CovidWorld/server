@@ -46,6 +46,7 @@ namespace Sygic.Corona.Domain
             locations = new List<Location>();
             alerts = new List<Alert>();
             areaExits = new List<AreaExit>();
+            presenceChecks = new List<PresenceCheck>();
             CreatedOn = DateTime.UtcNow;
         }
         public Profile(string deviceId, string pushToken, string locale, string authToken) : this()

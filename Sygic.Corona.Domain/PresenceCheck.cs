@@ -25,5 +25,10 @@ namespace Sygic.Corona.Domain
             Status = status;
             UpdatedOn = DateTime.UtcNow;
         }
+
+        public bool IsActive(DateTime checkTime)
+        {
+            return checkTime < DeadLineCheck;
+        } 
     }
 }
