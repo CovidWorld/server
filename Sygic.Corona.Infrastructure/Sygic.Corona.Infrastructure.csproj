@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20200514194523_ChangeAreaExistToList.Designer.cs" />
     <Compile Remove="Migrations\20200514200732_ChangeAreaExistToList1.cs" />
     <Compile Remove="Migrations\20200514200732_ChangeAreaExistToList1.Designer.cs" />
+    <Compile Remove="Migrations\20200515115036_ClientInfoPlatformEnum.cs" />
+    <Compile Remove="Migrations\20200515115036_ClientInfoPlatformEnum.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

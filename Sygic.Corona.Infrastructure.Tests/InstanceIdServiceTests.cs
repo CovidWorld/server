@@ -29,7 +29,7 @@ namespace Sygic.Corona.Infrastructure.Tests
             var info = await service.GetInstanceInfoAsync(token, default);
 
             info.Should().NotBeNull();
-            info.Platform.Should().BeOneOf("ANDROID", "IOS");
+            info.Platform.Should().BeOfType(typeof(Domain.Platform));
         }
     }
 }

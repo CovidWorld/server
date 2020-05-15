@@ -5,9 +5,9 @@
         public string Name { get; private set; }
         public string Integrator { get; private set; }
         public string Version { get; private set; }
-        public string OperationSystem { get; private set; }
+        public Platform OperationSystem { get; private set; }
 
-        public ClientInfo(string name, string integrator, string version, string operationSystem)
+        public ClientInfo(string name, string integrator, string version, Platform operationSystem)
         {
             Name = name;
             Integrator = integrator;

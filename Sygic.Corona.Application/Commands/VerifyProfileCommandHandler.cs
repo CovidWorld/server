@@ -39,7 +39,7 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Nonce not found or expired");
             }
 
-            if (profile.ClientInfo.OperationSystem == "anr")
+            if (profile.ClientInfo.OperationSystem == Platform.Android)
             {
                 var attestation = androidAttestation.ParseAndVerify(request.SignedAttestationStatement);
 

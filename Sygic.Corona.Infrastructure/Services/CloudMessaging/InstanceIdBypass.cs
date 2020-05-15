@@ -9,10 +9,10 @@ namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
         {
             return Task.FromResult(new InstanceInfo
             {
-                Application = "test",
-                ApplicationVersion = "test",
+                Application = "test.android.com",
+                ApplicationVersion = "1.0.0",
                 AuthorizedEntity = "test",
-                Platform = "test",
+                Platform = Domain.Platform.Android,
                 Scope = "test"
             });
         }

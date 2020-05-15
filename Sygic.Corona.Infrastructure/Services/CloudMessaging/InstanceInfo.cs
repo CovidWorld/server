@@ -1,4 +1,6 @@
-﻿namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
+﻿using Sygic.Corona.Domain;
+
+namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
 {
     public class InstanceInfo
     {
@@ -6,6 +8,6 @@
         public string Application { get; set; }
         public string Scope { get; set; }
         public string AuthorizedEntity { get; set; }
-        public string Platform { get; set; }
+        public Platform Platform { get; set; }
     }
 }

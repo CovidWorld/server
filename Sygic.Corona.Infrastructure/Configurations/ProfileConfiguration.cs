@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Sygic.Corona.Domain;
+using System;
 
 namespace Sygic.Corona.Infrastructure.Configurations
 {
@@ -16,7 +17,13 @@ namespace Sygic.Corona.Infrastructure.Configurations
             builder.Property(x => x.Locale).IsRequired();
             builder.Property(x => x.PushToken).IsRequired(false);
 
-            builder.OwnsOne(x => x.ClientInfo, n => { n.WithOwner(); });
+            builder.OwnsOne(x => x.ClientInfo, n => 
+            { 
+                n.WithOwner(); 
+                n.Property(p => p.OperationSystem)
+                    .HasConversion(x => x.ToString(),
+                        x => (Platform)Enum.Parse(typeof(Platform), x));
+            });
             builder.OwnsOne(x => x.QuarantineAddress, n => { n.WithOwner(); });
 
             //var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
