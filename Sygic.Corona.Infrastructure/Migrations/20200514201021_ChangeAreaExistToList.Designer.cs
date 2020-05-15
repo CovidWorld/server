@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sygic.Corona.Infrastructure;
 
 namespace Sygic.Corona.Infrastructure.Migrations
 {
     [DbContext(typeof(CoronaContext))]
-    partial class CoronaContextModelSnapshot : ModelSnapshot
+    [Migration("20200514201021_ChangeAreaExistToList")]
+    partial class ChangeAreaExistToList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

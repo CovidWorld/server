@@ -31,7 +31,7 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile is not in quarantine.");
             }
 
-            var exit = new AreaExit(request.Latitude, request.Longitude, request.Accuracy, timeConvertService.UnixTimeStampToDateTime(request.RecordTimestamp));
+            var exit = new AreaExit(profile.Id, request.Severity, timeConvertService.UnixTimeStampToDateTime(request.RecordTimestamp));
             profile.AddAreaExit(exit);
 
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);

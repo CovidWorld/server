@@ -11,6 +11,12 @@
     <Compile Remove="Migrations\20200514101204_AddPushNonce.Designer.cs" />
     <Compile Remove="Migrations\20200514101540_AddPushNonce.cs" />
     <Compile Remove="Migrations\20200514101540_AddPushNonce.Designer.cs" />
+    <Compile Remove="Migrations\20200514193602_ChangeAreaExistToList.cs" />
+    <Compile Remove="Migrations\20200514193602_ChangeAreaExistToList.Designer.cs" />
+    <Compile Remove="Migrations\20200514194523_ChangeAreaExistToList.cs" />
+    <Compile Remove="Migrations\20200514194523_ChangeAreaExistToList.Designer.cs" />
+    <Compile Remove="Migrations\20200514200732_ChangeAreaExistToList1.cs" />
+    <Compile Remove="Migrations\20200514200732_ChangeAreaExistToList1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

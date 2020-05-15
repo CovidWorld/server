@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -10,36 +9,36 @@ using Newtonsoft.Json;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 using MediatR;
 using Sygic.Corona.Application.Validations;
+using System.Threading;
 using Sygic.Corona.Domain.Common;
 using System.Linq;
-using System.Threading;
 using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Application.Commands;
+using System;
 
 namespace Sygic.Corona.QuarantineApi
 {
-    public class UpdateProfile
+    public class ReportAreaExit
     {
         private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public UpdateProfile(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public ReportAreaExit(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
         {
             this.verification = verification ?? throw new ArgumentNullException(nameof(verification));
             this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             this.validation = validation ?? throw new ArgumentNullException(nameof(validation));
         }
 
-        [FunctionName("UpdateProfile")]
+        [FunctionName("ReportAreaExit")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "profile")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "areaexit")] HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
             try
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string signedAttestation = req.Headers["X-SignedSafetyNet"].ToString();
                 string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
                 if (signatureHeaderParameters.Length != 2)
                 {
@@ -52,9 +51,9 @@ namespace Sygic.Corona.QuarantineApi
                     return new UnauthorizedResult();
                 }
 
-                var data = JsonConvert.DeserializeObject<VerifyProfileRequest>(requestBody);
+                var data = JsonConvert.DeserializeObject<NotifyAreaExitRequest>(requestBody);
 
-                var command = new VerifyProfileCommand(data.DeviceId, data.ProfileId, data.CovidPass, data.Nonce, signedAttestation);
+                var command = new NotifyAreaExitCommand(data.ProfileId,data.DeviceId, data.Severity, data.RecordTimestamp);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();
