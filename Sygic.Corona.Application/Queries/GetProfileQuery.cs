@@ -5,10 +5,10 @@ namespace Sygic.Corona.Application.Queries
 {
     public class GetQuarantineQuery : IRequest<GetQuarantineResponse>
     {
-        public int ProfileId { get; }
+        public uint ProfileId { get; }
         public string DeviceId { get; }
 
-        public GetQuarantineQuery(int profileId, string deviceId)
+        public GetQuarantineQuery(uint profileId, string deviceId)
         {
             ProfileId = profileId;
             DeviceId = deviceId;

@@ -28,23 +28,11 @@ namespace Sygic.Corona.Api
 
         [FunctionName("CreateDeviceProfile")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = null)]
+            HttpRequest req,
             ILogger log, CancellationToken cancellationToken)
         {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<CreateProfileRequest>(requestBody);
-            
-            var command = new CreateProfileCommand(data.DeviceId, data.PushToken,data.Locale);
-            try
-            {
-                var result = await mediator.Send(command, cancellationToken);
-                return new OkObjectResult(result);
-            }
-            catch (DomainException ex)
-            {
-                var errors = validation.ProcessErrors(ex);
-                return new BadRequestObjectResult(errors);
-            }
+            return new OkResult();
         }
     }
 }

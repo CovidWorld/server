@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
@@ -50,6 +50,7 @@ namespace Sygic.Corona.Application.Commands
             }
 
             profile.AssignCovidPass(request.CovidPass);
+            profile.AssignPublicKey(request.PublicKey);
             profile.Verify();
 
             await context.SaveChangesAsync(cancellationToken);

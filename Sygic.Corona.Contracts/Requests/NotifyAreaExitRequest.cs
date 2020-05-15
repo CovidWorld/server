@@ -1,9 +1,7 @@
 ﻿namespace Sygic.Corona.Contracts.Requests
 {
-    public class NotifyAreaExitRequest
+    public class NotifyAreaExitRequest : VerifiedRequestBase
     {
-        public uint ProfileId { get; set; }
-        public string DeviceId { get; set; }
         public int Severity { get; set; }
         public int RecordTimestamp { get; set; }
     }

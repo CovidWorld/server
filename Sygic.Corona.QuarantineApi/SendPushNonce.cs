@@ -13,20 +13,20 @@ using MediatR;
 using System.Linq;
 using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Application.Commands;
+using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Domain.Common;
+using Sygic.Corona.QuarantineApi.Extensions;
 
 namespace Sygic.Corona.QuarantineApi
 {
     public class SendPushNonce
     {
-        private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public SendPushNonce(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public SendPushNonce(IMediator mediator, ValidationProcessor validation)
         {
-            this.verification = verification;
             this.mediator = mediator;
             this.validation = validation;
         }
@@ -38,20 +38,15 @@ namespace Sygic.Corona.QuarantineApi
         {
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
-                if (signatureHeaderParameters.Length != 2)
-                {
-                    return new BadRequestResult();
-                }
-                var isVerified = verification.Verify(requestBody, signatureHeaderParameters.First(), signatureHeaderParameters.Last());
+                var data = await req.DeserializeJsonBody<GetPushNonceRequest>();
 
+                var verificationQuery = new VerifyRequestQuery(data, req);
+                var isVerified = await mediator.Send(verificationQuery, cancellationToken);
                 if (!isVerified)
                 {
                     return new UnauthorizedResult();
                 }
-
-                var data = JsonConvert.DeserializeObject<GetPushNonceRequest>(requestBody);
+                
                 var generateNonceCommand = new GeneratePushNonceCommand(data.DeviceId, data.ProfileId, new TimeSpan(0, 10, 0));
                 await mediator.Send(generateNonceCommand, cancellationToken);
                 return new OkResult();

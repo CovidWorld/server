@@ -1,8 +1,6 @@
 ﻿namespace Sygic.Corona.Contracts.Requests
 {
-    public class GetPushNonceRequest
+    public class GetPushNonceRequest : VerifiedRequestBase
     {
-        public string DeviceId { get; set; }
-        public uint ProfileId { get; set; }
     }
 }

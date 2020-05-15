@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,24 +8,23 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Sygic.Corona.Application.Commands;
+using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.Authorization;
+using Sygic.Corona.QuarantineApi.Extensions;
 
 namespace Sygic.Corona.QuarantineApi
 {
     public class SendHeartbeat
     {
-        private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public SendHeartbeat(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public SendHeartbeat(IMediator mediator, ValidationProcessor validation)
         {
-            this.verification = verification;
             this.mediator = mediator;
             this.validation = validation;
         }
@@ -38,22 +36,16 @@ namespace Sygic.Corona.QuarantineApi
         {
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
-                if (signatureHeaderParameters.Length != 2)
-                {
-                    return new BadRequestResult();
-                }
-                var isVerified = verification.Verify(requestBody, signatureHeaderParameters.First(), signatureHeaderParameters.Last());
+                var data = await req.DeserializeJsonBody<HeartbeatRequest>();
 
+                var verificationQuery = new VerifyRequestQuery(data, req);
+                var isVerified = await mediator.Send(verificationQuery, cancellationToken);
                 if (!isVerified)
                 {
                     return new UnauthorizedResult();
                 }
-
-                var data = JsonConvert.DeserializeObject<HeartbeatRequest>(requestBody);
-                var command = new SendHeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass);
                 
+                var command = new SendHeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Sygic.Corona.Application.Queries;
 using Sygic.Corona.Application.Validations;
+using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Domain.Common;
 using Sygic.Corona.Infrastructure.Services.Authorization;
 
@@ -17,13 +18,11 @@ namespace Sygic.Corona.QuarantineApi
 {
     public class GetQuarantine
     {
-        private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public GetQuarantine(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public GetQuarantine(IMediator mediator, ValidationProcessor validation)
         {
-            this.verification = verification;
             this.mediator = mediator;
             this.validation = validation;
         }
@@ -35,24 +34,13 @@ namespace Sygic.Corona.QuarantineApi
         {
             try
             {
-                var signatureHeaderParameters = req.Headers["X-Siganture"].ToString().Split(':');
-                if (signatureHeaderParameters.Length > 2)
-                {
-                    return new BadRequestResult();
-                }
-
-                var isVerified = verification.Verify(req.QueryString.Value, signatureHeaderParameters.First(), signatureHeaderParameters.Last());
-                if (!isVerified)
-                {
-                    return new UnauthorizedResult();
-                }
-
                 //
                 if (!req.Query.TryGetValue("profileId", out var profileIdString))
                 {
                     return new BadRequestErrorMessageResult("Missing query param: profileId");
                 }
-                if (!int.TryParse(profileIdString, out var profileId))
+
+                if (!uint.TryParse(profileIdString, out var profileId))
                 {
                     return new BadRequestErrorMessageResult($"Bad query param type: profileId. Cannot be cast to {profileId.GetType()}");
                 }
@@ -63,7 +51,20 @@ namespace Sygic.Corona.QuarantineApi
                     return new BadRequestErrorMessageResult("Missing query param: deviceId");
                 }
 
-                var query = new GetQuarantineQuery(profileId, deviceId);
+                var data = new GetQuarantineRequest
+                {
+                    ProfileId = profileId,
+                    DeviceId = deviceId
+                };
+
+                var verificationQuery = new VerifyRequestQuery(data, req);
+                var isVerified = await mediator.Send(verificationQuery, cancellationToken);
+                if (!isVerified)
+                {
+                    return new UnauthorizedResult();
+                }
+
+                var query = new GetQuarantineQuery(data.ProfileId, data.DeviceId);
                 var response = await mediator.Send(query, cancellationToken);
 
                 if (response == null)

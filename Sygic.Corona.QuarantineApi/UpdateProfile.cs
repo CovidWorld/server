@@ -45,7 +45,9 @@ namespace Sygic.Corona.QuarantineApi
                 {
                     return new BadRequestResult();
                 }
-                var isVerified = verification.Verify(requestBody, signatureHeaderParameters.First(), signatureHeaderParameters.Last());
+
+                var publicKey = signatureHeaderParameters.First();
+                var isVerified = verification.Verify(requestBody, publicKey, signatureHeaderParameters.Last());
 
                 if (!isVerified)
                 {
@@ -54,7 +56,7 @@ namespace Sygic.Corona.QuarantineApi
 
                 var data = JsonConvert.DeserializeObject<VerifyProfileRequest>(requestBody);
 
-                var command = new VerifyProfileCommand(data.DeviceId, data.ProfileId, data.CovidPass, data.Nonce, signedAttestation);
+                var command = new VerifyProfileCommand(data.DeviceId, data.ProfileId, data.CovidPass, data.Nonce, publicKey, signedAttestation);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();
