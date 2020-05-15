@@ -1,9 +1,7 @@
 ﻿namespace Sygic.Corona.Contracts.Requests
 {
-    public class HeartbeatRequest
+    public class HeartbeatRequest : VerifiedRequestBase
     {
-        public string DeviceId { get; set; }
-        public uint ProfileId { get; set; }
         public string CovidPass { get; set; }
     }
 }

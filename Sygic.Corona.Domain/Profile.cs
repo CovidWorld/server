@@ -17,6 +17,7 @@ namespace Sygic.Corona.Domain
         public bool IsVerified { get; private set; }
         public string MedicalId { get; private set; }
         public string CovidPass { get; private set; }
+        public string PublicKey { get; private set; }
         public DateTime? CreatedOn { get; private set; }
         public DateTime? BorderCrossedAt { get; private set; }
         public DateTime? QuarantineBeginning { get; private set; }
@@ -97,6 +98,7 @@ namespace Sygic.Corona.Domain
 
         public void UpdateQuarantine(DateTime start, DateTime end, DateTime borderCrossedAt, Address quarantineAddress)
         {
+            IsInQuarantine = true;
             QuarantineBeginning = start.ToUniversalTime();
             QuarantineEnd = end.ToUniversalTime();
             BorderCrossedAt = borderCrossedAt.ToUniversalTime();
@@ -121,6 +123,11 @@ namespace Sygic.Corona.Domain
         public void AssignCovidPass(string covidPass)
         {
             CovidPass = covidPass;
+        }
+        
+        public void AssignPublicKey(string publicKey)
+        {
+            PublicKey = publicKey;
         }
 
         public void AddAlert(Alert alert)

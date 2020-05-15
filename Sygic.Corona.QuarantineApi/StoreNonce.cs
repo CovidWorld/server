@@ -16,19 +16,17 @@ using Sygic.Corona.Application.Validations;
 using Sygic.Corona.Contracts.Requests;
 using Sygic.Corona.Contracts.Responses;
 using Sygic.Corona.Domain.Common;
-using Sygic.Corona.Infrastructure.Services.Authorization;
+using Sygic.Corona.QuarantineApi.Extensions;
 
 namespace Sygic.Corona.QuarantineApi
 {
     public class StoreNonce
     {
-        private readonly ISignVerification verification;
         private readonly IMediator mediator;
         private readonly ValidationProcessor validation;
 
-        public StoreNonce(ISignVerification verification, IMediator mediator, ValidationProcessor validation)
+        public StoreNonce(IMediator mediator, ValidationProcessor validation)
         {
-            this.verification = verification;
             this.mediator = mediator;
             this.validation = validation;
         }
@@ -40,20 +38,14 @@ namespace Sygic.Corona.QuarantineApi
         {
             try
             {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                string[] signatureHeaderParameters = req.Headers["X-Signature"].ToString().Split(':');
-                if (signatureHeaderParameters.Length != 2)
-                {
-                    return new BadRequestResult();
-                }
-                var isVerified = verification.Verify(requestBody, signatureHeaderParameters.First(), signatureHeaderParameters.Last());
+                var data = await req.DeserializeJsonBody<StoreNonceRequest>();
 
+                var verificationQuery = new VerifyRequestQuery(data, req);
+                var isVerified = await mediator.Send(verificationQuery, cancellationToken);
                 if (!isVerified)
                 {
                     return new UnauthorizedResult();
                 }
-
-                var data = JsonConvert.DeserializeObject<StoreNonceRequest>(requestBody);
                 var command = new StoreNonceCommand(data.CovidPass);
                 
                 await mediator.Send(command, cancellationToken);
