@@ -9,8 +9,8 @@
 
     public enum PresenceCheckStatus
     {
-        Ok = 0,
-        Suspected = 1,
-        Left = 2
+        SUSPECTED = 1,
+        OK,
+        LEFT
     }
 }

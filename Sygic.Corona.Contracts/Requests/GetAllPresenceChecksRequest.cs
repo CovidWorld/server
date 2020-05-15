@@ -1,7 +1,10 @@
-﻿namespace Sygic.Corona.Contracts.Requests
+﻿using System;
+
+namespace Sygic.Corona.Contracts.Requests
 {
     public class GetAllPresenceChecksRequest
     {
-        // TODO: from, to ?
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 }

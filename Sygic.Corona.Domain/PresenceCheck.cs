@@ -6,6 +6,7 @@ namespace Sygic.Corona.Domain
     {
         public Guid Id { get; private set; }
         public long ProfileId { get; private set; }
+        public Profile Profile { get; private set; }
         public DateTime CreatedOn { get; private set; }
         public DateTime UpdatedOn { get; private set; }
         public DateTime DeadLineCheck { get; private set; }
