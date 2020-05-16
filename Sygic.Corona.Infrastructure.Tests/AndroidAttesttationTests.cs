@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using Sygic.Corona.Infrastructure.Services.AndroidAttestation;
+using Sygic.Corona.Infrastructure.Services.Authorization;
 
 namespace Sygic.Corona.Infrastructure.Tests
 {
@@ -15,6 +16,16 @@ namespace Sygic.Corona.Infrastructure.Tests
             var result = service.ParseAndVerify(statement);
 
             result.Should().NotBeNull();
+        }
+
+        [Test]
+        public void VeriffySignature()
+        {
+            var service = new SignVerificationService();
+            var message = configurationSection["testCipherMessage"];
+            var key = configurationSection["testCipherKey"];
+            var signature = configurationSection["testCipherSignature"];
+            service.Verify(message, key, signature);
         }
     }
 }
