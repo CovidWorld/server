@@ -11,11 +11,10 @@ namespace Sygic.Corona.Contracts.Responses
     
     public class PresenceCheckResponse
     {
-        public Guid Id { get; set; }
         public string CovidPass { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
-        public DateTime DeadLineCheck { get; set; }
+        public DateTime? LastHeartbeat { get; set; }
         public PresenceCheckStatus Status { get; set; }
     }
 }

@@ -29,22 +29,32 @@ namespace Sygic.Corona.Application.Queries
                 throw new DomainException("Invalid time interval. Should be From <= To");
             }
 
-            var presenceChecks = await context.PresenceChecks
-                .Where(x => request.From.ToUniversalTime() <= x.CreatedOn && x.CreatedOn < request.To.ToUniversalTime())
-                .Include(x => x.Profile)
-                .OrderBy(x => x.CreatedOn)
-                .AsNoTracking()
-                .Select(x => new PresenceCheckResponse
+            var checks = await context.PresenceChecks.AsNoTracking()
+                    .Join(context.Profiles,
+                        check => check.ProfileId,
+                        profile => profile.Id,
+                        (check, profile) => new
+                        {
+                            Check = check,
+                            profile.CovidPass,
+                            profile.LastPositionReportTime
+                        })
+                    .OrderBy(x => x.Check.CreatedOn)
+                    .ToListAsync(cancellationToken);
+
+            var presenceChecks = checks.Select(x =>
+                new PresenceCheckResponse
                 {
-                    Id = x.Id,
-                    CovidPass = x.Profile.CovidPass,
-                    // DateTime retrieved from DB has DateTimeKind.Unspecified, which defaults to Local. We stored UTC and want to retrieve it as UTC.
-                    CreatedOn = new DateTime(x.CreatedOn.Ticks, DateTimeKind.Utc) + request.Offset, // offset for NCZI (note that it possibly produces dates in the future)
-                    UpdatedOn = new DateTime(x.UpdatedOn.Ticks, DateTimeKind.Utc) + request.Offset,
-                    DeadLineCheck = new DateTime(x.DeadLineCheck.Ticks, DateTimeKind.Utc) + request.Offset,
-                    Status = ToResponseStatus(x.Status)
+                    CovidPass = x.CovidPass,
+                    Status = ToResponseStatus(x.Check.Status),
+                        // DateTime retrieved from DB has DateTimeKind.Unspecified, which defaults to Local. We stored UTC and want to retrieve it as UTC.
+                        CreatedOn = new DateTime(x.Check.CreatedOn.Ticks, DateTimeKind.Utc) + request.Offset, // offset for NCZI (note that it possibly produces dates in the future)
+                        UpdatedOn = new DateTime(x.Check.UpdatedOn.Ticks, DateTimeKind.Utc) + request.Offset,
+                    LastHeartbeat = x.LastPositionReportTime.HasValue
+                            ? new DateTime(x.LastPositionReportTime.Value.Ticks, DateTimeKind.Utc)
+                            : default(DateTime?)
                 })
-                .ToListAsync(cancellationToken);
+                .ToList();
 
             return new GetAllPresenceChecksResponse
             {

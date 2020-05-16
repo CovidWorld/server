@@ -50,7 +50,7 @@ namespace Sygic.Corona.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(b => b.PresenceChecks)
-                .WithOne(x => x.Profile)
+                .WithOne()
                 .HasForeignKey(x => x.ProfileId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
