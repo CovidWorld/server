@@ -28,6 +28,7 @@ namespace Sygic.Corona.Infrastructure.Tests
         [TestCase("Navi(com.sygic.aura)/18.7.0(android 9)", "Navi", "com.sygic.aura", "18.7.0", "android")]
         [TestCase("SmartQuarantine(com.android.covid19zostanzdravy)/1.0.2(anr)", "SmartQuarantine", "com.android.covid19zostanzdravy", "1.0.2", "anr")]
         [TestCase("Tracing(com.android.covid19tracing)/1.5.0(ios)", "Tracing", "com.android.covid19tracing", "1.5.0", "ios")]
+        [TestCase("eKarantena(sk.nczi.ekarantena)/1.1.2.192(ios)", "eKarantena", "sk.nczi.ekarantena", "1.1.2.192", "ios")]
         public void RegexUserAgentHeaderTest(string header, string appName, string integrator, string appVersion, string operationSystem)
         {
             var userAgentRegex = new Regex(configurationSection["UserAgentHeaderRegex"]);
