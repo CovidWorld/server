@@ -49,7 +49,7 @@ namespace Sygic.Corona.Infrastructure
             services.AddSingleton(CloudStorageAccount.Parse(configuration["CloudStorageConnectionString"]));
             services.AddSingleton<ICloudStorageManager, CloudStorageManager>(x => 
                 new CloudStorageManager(x.GetService<CloudStorageAccount>(), configuration["ExposureKeysContainerName"]));
-            services.AddSingleton<IClientInfo, ClientInfoService>(sp => new ClientInfoService(configuration["UserAgentHeaderRegex"]));
+            services.AddSingleton<IClientInfo, ClientInfoService>();
             services.AddSingleton<INonceGenerator, NonceGenerator>();
 
             if (configuration["AZURE_FUNCTIONS_ENVIRONMENT"] == "Development")
