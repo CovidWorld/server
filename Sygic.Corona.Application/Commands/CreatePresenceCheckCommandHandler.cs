@@ -39,7 +39,7 @@ namespace Sygic.Corona.Application.Commands
 
                 if (!activeCheck.Any() && profile.IsInQuarantine)
                 {
-                    var check = new PresenceCheck(profile.Id, now, now.Add(request.DeadLineTime), PresenceCheckStatus.SUSPECTED);
+                    var check = new PresenceCheck(profile.Id, now, now.Add(request.DeadLineTime), request.Status);
                     profile.AddPresenceCheck(check);
                 }
             }

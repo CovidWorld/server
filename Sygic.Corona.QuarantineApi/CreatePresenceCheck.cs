@@ -56,7 +56,7 @@ namespace Sygic.Corona.QuarantineApi
                 
                 var data = await req.DeserializeJsonBody<CreatePresenceCheckRequest>();
 
-                var command = new CreatePresenceCheckCommand(data.CovidPass, TimeSpan.Parse(configuration["PresenceCheckDeadLine"]));
+                var command = new CreatePresenceCheckCommand(data.CovidPass, TimeSpan.Parse(configuration["PresenceCheckDeadLine"]), Domain.PresenceCheckStatus.SUSPECTED);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkObjectResult(new CreatePresenceCheckResponse());
