@@ -5,14 +5,16 @@ namespace Sygic.Corona.Application.Commands
 {
     public class UpdatePresenceCheckCommand : IRequest
     {
-        public uint ProfileId { get; }
+        public long ProfileId { get; }
+        public string DeviceId { get; set; }
         public string CovidPass { get; }
         public PresenceCheckStatus Status { get; }
         public string Nonce { get; }
 
-        public UpdatePresenceCheckCommand(uint profileId, string deviceId, string covidPass, PresenceCheckStatus status, string nonce)
+        public UpdatePresenceCheckCommand(long profileId, string deviceId, string covidPass, PresenceCheckStatus status, string nonce)
         {
             ProfileId = profileId;
+            DeviceId = deviceId;
             CovidPass = covidPass;
             Status = status;
             Nonce = nonce;
