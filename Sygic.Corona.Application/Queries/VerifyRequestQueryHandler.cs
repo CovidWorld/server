@@ -64,6 +64,7 @@ namespace Sygic.Corona.Application.Queries
 
         private async Task<bool> HandleRequestWithBody(VerifyRequestQuery request, CancellationToken cancellationToken)
         {
+            request.HttpRequest.Body.Seek(0, SeekOrigin.Begin);
             var requestBody = await new StreamReader(request.HttpRequest.Body).ReadToEndAsync();
 
             var signatureHeaderParameters = request.HttpRequest.Headers["X-Signature"].ToString().Split(':');
