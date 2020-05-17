@@ -40,7 +40,7 @@ namespace Sygic.Corona.QuarantineApi
             {
                 var data = await req.DeserializeJsonBody<GetPushNonceRequest>();
 
-                var verificationQuery = new VerifyRequestQuery(data, req);
+                var verificationQuery = new VerifyRequestWithoutPublicKeyValidationQuery(data, req);
                 var isVerified = await mediator.Send(verificationQuery, cancellationToken);
                 if (!isVerified)
                 {
