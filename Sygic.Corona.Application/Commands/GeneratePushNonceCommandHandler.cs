@@ -49,7 +49,7 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Push token is invalid");
             }
 
-            if(instanceInfo.Platform != profile.ClientInfo.OperationSystem || instanceInfo.Application != profile.ClientInfo.Name)
+            if(instanceInfo.Platform != profile.ClientInfo.OperationSystem || instanceInfo.Application != profile.ClientInfo.Integrator)
             {
                 throw new DomainException("Push token is invalid or from wrong platform");
             }
@@ -75,7 +75,8 @@ namespace Sygic.Corona.Application.Commands
                     { "type", "PUSH_NONCE" },
                     { "Nonce", pushNonce.Body }
                 },
-                Priority = "high"
+                Priority = "high",
+                ContentAvailable = true
             };
             var sendNonceCommand = new SendPushNotificationCommand(profile.Id, message);
             await mediator.Send(sendNonceCommand, cancellationToken);
