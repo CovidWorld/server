@@ -247,7 +247,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
             var now = DateTime.UtcNow;
             return await context.Profiles
                 .AsNoTracking()
-                .Where(x => x.IsInQuarantine && x.QuarantineEnd > now)
+                .Where(x => x.QuarantineEnd >= now)
                 .ToListAsync(cancellationToken);
         }
 
@@ -257,7 +257,7 @@ namespace Sygic.Corona.Infrastructure.Repositories
             var now = DateTime.UtcNow;
 
             var inactiveProfileCandidates = await context.Profiles
-                .Where(x => x.IsInQuarantine && (x.LastPositionReportTime < from || !x.LastPositionReportTime.HasValue) && x.QuarantineEnd > now)
+                .Where(x => (x.LastPositionReportTime < from || !x.LastPositionReportTime.HasValue) && x.QuarantineEnd > now)
                 .ToListAsync(cancellationToken);
 
             var inactiveProfileCandidatesGroup = inactiveProfileCandidates

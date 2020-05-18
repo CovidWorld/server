@@ -23,7 +23,7 @@ namespace Sygic.Corona.Application.Commands
         }
         protected override async Task Handle(SendNotificationToInactiveProfileCommand request, CancellationToken cancellationToken)
         {
-            if (request.Profile.IsInQuarantine)
+            if (request.Profile.ActiveQuarantine(DateTime.UtcNow))
             {
                 if (!string.IsNullOrEmpty(request.Profile.CovidPass))
                 {

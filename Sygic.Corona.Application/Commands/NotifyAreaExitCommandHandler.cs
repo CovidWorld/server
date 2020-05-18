@@ -28,7 +28,7 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
 
-            if (!profile.IsInQuarantine)
+            if (!profile.ActiveQuarantine(DateTime.UtcNow))
             {
                 throw new DomainException("Profile is not in quarantine.");
             }

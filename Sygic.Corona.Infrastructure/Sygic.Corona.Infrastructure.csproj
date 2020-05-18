@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200514200732_ChangeAreaExistToList1.Designer.cs" />
     <Compile Remove="Migrations\20200515115036_ClientInfoPlatformEnum.cs" />
     <Compile Remove="Migrations\20200515115036_ClientInfoPlatformEnum.Designer.cs" />
+    <Compile Remove="Migrations\20200518111054_RemoveIsInQuarantine.cs" />
+    <Compile Remove="Migrations\20200518111054_RemoveIsInQuarantine.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

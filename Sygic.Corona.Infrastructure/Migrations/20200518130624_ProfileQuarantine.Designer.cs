@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sygic.Corona.Infrastructure;
 
 namespace Sygic.Corona.Infrastructure.Migrations
 {
     [DbContext(typeof(CoronaContext))]
-    partial class CoronaContextModelSnapshot : ModelSnapshot
+    [Migration("20200518130624_ProfileQuarantine")]
+    partial class ProfileQuarantine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,10 +337,10 @@ namespace Sygic.Corona.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<decimal>("Latitude")
-                                .HasColumnType("decimal(11, 8)");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<decimal>("Longitude")
-                                .HasColumnType("decimal(11, 8)");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("StreetName")
                                 .HasColumnType("nvarchar(max)");

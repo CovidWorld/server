@@ -37,7 +37,7 @@ namespace Sygic.Corona.Application.Commands
                     .Where(x => x.ProfileId == profile.Id && now < x.DeadLineCheck)
                     .ToListAsync(cancellationToken);
 
-                if (!activeCheck.Any() && profile.IsInQuarantine)
+                if (!activeCheck.Any() && profile.ActiveQuarantine(now))
                 {
                     var check = new PresenceCheck(profile.Id, now, now.Add(request.DeadLineTime), request.Status);
                     profile.AddPresenceCheck(check);
