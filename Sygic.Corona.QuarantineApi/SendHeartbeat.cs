@@ -45,7 +45,7 @@ namespace Sygic.Corona.QuarantineApi
                     return new UnauthorizedResult();
                 }
                 
-                var command = new SendHeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass);
+                var command = new SendHeartbeatCommand(data.DeviceId, data.ProfileId, data.CovidPass, data.Nonce);
                 await mediator.Send(command, cancellationToken);
 
                 return new OkResult();
