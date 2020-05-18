@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
@@ -28,9 +29,9 @@ namespace Sygic.Corona.Application.Queries
             return new GetQuarantineResponse
             {
                 CovidPass = profile.CovidPass,
-                QuarantineStart = profile.QuarantineBeginning.Value,
-                QuarantineEnd = profile.QuarantineEnd.Value,
-                BorderCrossedAt = profile.BorderCrossedAt.Value,
+                QuarantineStart = profile.QuarantineBeginning ?? default(DateTime?),
+                QuarantineEnd = profile.QuarantineEnd ?? default(DateTime?),
+                BorderCrossedAt = profile.BorderCrossedAt ?? default(DateTime?),
                 Address = profile.QuarantineAddress != null ? new AddressResponse
                 {
                     Latitude = profile.QuarantineAddress.Latitude,
