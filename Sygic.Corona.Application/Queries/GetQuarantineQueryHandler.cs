@@ -36,7 +36,7 @@ namespace Sygic.Corona.Application.Queries
                 {
                     Latitude = profile.QuarantineAddress.Latitude,
                     Longitude = profile.QuarantineAddress.Longitude,
-                    Country = profile.QuarantineAddress.CountryCode.ToUpper(),
+                    Country = profile.QuarantineAddress.CountryCode?.ToUpper(),
                     City = profile.QuarantineAddress.City,
                     ZipCode = profile.QuarantineAddress.ZipCode,
                     StreetName = profile.QuarantineAddress.StreetName,
