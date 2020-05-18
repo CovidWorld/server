@@ -7,7 +7,7 @@ namespace Sygic.Corona.Infrastructure.Services.CloudMessaging
     public class Notification
     {
         [JsonProperty("priority")] public string Priority { get; set; }
-        [JsonProperty("content-available")] public bool ContentAvailable { get; set; }
+        [JsonProperty("content_available")] public bool ContentAvailable { get; set; }
         [JsonProperty("data")] public IDictionary<string, object> Data { get; set; }
         [JsonProperty("notification")] public NotificationContent NotificationContent { get; set; }
     }
