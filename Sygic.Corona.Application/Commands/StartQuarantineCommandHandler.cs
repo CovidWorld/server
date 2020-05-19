@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Domain;
@@ -24,7 +25,7 @@ namespace Sygic.Corona.Application.Commands
                 throw new DomainException("Profile not found.");
             }
             
-            if (profile.IsInQuarantine == false)
+            if (profile.ActiveQuarantine(DateTime.UtcNow) == false)
             {
                 profile.BeginQuarantine(request.StartDate, request.EndDate);
                 profile.AssignCovidPass(request.CovidPass);

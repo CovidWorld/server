@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Sygic.Corona.Contracts.Responses;
@@ -26,7 +27,7 @@ namespace Sygic.Corona.Application.Queries
 
             return new GetQuarantineStatusResponse
             {
-                IsInQuarantine = profile.IsInQuarantine,
+                IsInQuarantine = profile.ActiveQuarantine(DateTime.UtcNow),
                 QuarantineBeginning = profile.QuarantineBeginning,
                 QuarantineEnd = profile.QuarantineEnd
             };

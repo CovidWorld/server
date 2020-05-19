@@ -56,7 +56,6 @@ namespace Sygic.Corona.Domain
             Locale = locale;
             AuthToken = authToken;
             ConfirmedInfection = false;
-            IsInQuarantine = false;
             IsVerified = false;
         }
 
@@ -88,21 +87,18 @@ namespace Sygic.Corona.Domain
         
         public void BeginQuarantine(TimeSpan duration)
         {
-            IsInQuarantine = true;
             QuarantineBeginning = DateTime.UtcNow;
             QuarantineEnd = QuarantineBeginning.Value.Add(duration);
         }
 
         public void BeginQuarantine(DateTime from, DateTime to)
         {
-            IsInQuarantine = true;
             QuarantineBeginning = from.ToUniversalTime();
             QuarantineEnd = to.ToUniversalTime();
         }
 
         public void UpdateQuarantine(DateTime start, DateTime end, DateTime borderCrossedAt, Address quarantineAddress)
         {
-            IsInQuarantine = true;
             QuarantineBeginning = start.ToUniversalTime();
             QuarantineEnd = end.ToUniversalTime();
             BorderCrossedAt = borderCrossedAt.ToUniversalTime();
@@ -153,5 +149,17 @@ namespace Sygic.Corona.Domain
         {
             presenceChecks.Add(presenceCheck);
         }
+
+        public bool ActiveQuarantine(DateTime now)
+        {
+            if (QuarantineBeginning.HasValue && QuarantineEnd.HasValue)
+            {
+                return now.ToUniversalTime() >= QuarantineBeginning.Value && now.ToUniversalTime() <= QuarantineEnd.Value;
+            }
+            else
+            {
+                return false;
+            }
+        } 
     }
 }
