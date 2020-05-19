@@ -24,7 +24,14 @@ namespace Sygic.Corona.Infrastructure.Configurations
                     .HasConversion(x => x.ToString(),
                         x => (Platform)Enum.Parse(typeof(Platform), x));
             });
-            builder.OwnsOne(x => x.QuarantineAddress, n => { n.WithOwner(); });
+            builder.OwnsOne(x => x.QuarantineAddress, n => 
+            { 
+                n.WithOwner(); 
+                n.Property(p => p.Latitude)
+                    .HasColumnType("decimal(11, 8)");
+                n.Property(p => p.Longitude)
+                    .HasColumnType("decimal(11, 8)");
+            });
 
             //var navigation = builder.Metadata.FindNavigation(nameof(Profile.Contacts));
             //navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
