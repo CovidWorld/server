@@ -15,17 +15,20 @@ using Sygic.Corona.Domain;
 using Sygic.Corona.Domain.Common;
 using System.Web.Http;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Sygic.Corona.QuarantineApi
 {
     public class UpdateQuarantine
     {
         private readonly IMediator mediator;
+        private readonly IConfiguration configuration;
         private readonly ValidationProcessor validation;
 
-        public UpdateQuarantine(IMediator mediator, ValidationProcessor validation)
+        public UpdateQuarantine(IMediator mediator, IConfiguration configuration, ValidationProcessor validation)
         {
             this.mediator = mediator;
+            this.configuration = configuration;
             this.validation = validation;
         }
 
@@ -58,7 +61,8 @@ namespace Sygic.Corona.QuarantineApi
                         data.QuarantineAddressLatitude, data.QuarantineAddressLongitude,
                         data.QuarantineAddressCountry, data.QuarantineAddressCity, data.QuarantineAddressCityZipCode,
                         data.QuarantineAddressStreetName, data.QuarantineAddressStreetNumber
-                    )
+                    ),
+                    configuration["UpdateQuarantineNotificationTitle"], configuration["UpdateQuarantineNotificationBody"]
                 );
 
                 await mediator.Send(command, cancellationToken);

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace Sygic.Corona.Application.Commands
             
             foreach (var profile in profiles)
             {
-                var notification = CreateQuarantineUpdatedNotification(profile);
+                var notification = CreateQuarantineUpdatedNotification(profile, request.NotificationTitle, request.NotificationBody);
 
                 profile.UpdateQuarantine(request.QuarantineStart, request.QuarantineEnd, request.BorderCrossedAt, request.QuarantineAddress);
                 var command = new SendPushNotificationCommand(profile.Id, notification);
@@ -42,7 +41,7 @@ namespace Sygic.Corona.Application.Commands
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        private static Notification CreateQuarantineUpdatedNotification(Profile profile)
+        private static Notification CreateQuarantineUpdatedNotification(Profile profile, string title, string body)
         {
             var message = new Notification
             {
@@ -55,8 +54,8 @@ namespace Sygic.Corona.Application.Commands
                 },
                 NotificationContent = new NotificationContent
                 {
-                    Title = "Covid19 ZostanZdravy",
-                    Body = "Doba vasej karanteny sa zmenila, viac informacii najdete v aplikacii",
+                    Title = title,
+                    Body = body,
                     Sound = "default"
                 },
                 ContentAvailable = true
