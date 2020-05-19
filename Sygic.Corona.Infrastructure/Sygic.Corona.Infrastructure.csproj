@@ -21,6 +21,8 @@
     <Compile Remove="Migrations\20200515115036_ClientInfoPlatformEnum.Designer.cs" />
     <Compile Remove="Migrations\20200518111054_RemoveIsInQuarantine.cs" />
     <Compile Remove="Migrations\20200518111054_RemoveIsInQuarantine.Designer.cs" />
+    <Compile Remove="Migrations\20200518130624_ProfileQuarantine.cs" />
+    <Compile Remove="Migrations\20200518130624_ProfileQuarantine.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

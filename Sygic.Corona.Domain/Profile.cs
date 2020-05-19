@@ -13,7 +13,7 @@ namespace Sygic.Corona.Domain
         public Address QuarantineAddress { get; private set; }
         public string AuthToken { get; private set; }
         public bool ConfirmedInfection { get; private set; }
-        //public bool IsInQuarantine { get; private set; }
+        public bool IsInQuarantine { get; private set; }
         public bool IsVerified { get; private set; }
         public string MedicalId { get; private set; }
         public string CovidPass { get; private set; }
