@@ -51,6 +51,11 @@ namespace Sygic.Corona.Application.Commands
                 .Where(x => x.CreatedOn <= now && now <= x.DeadLineCheck)
                 .FirstOrDefaultAsync(cancellationToken);
 
+            if (pendingSuspectedPresenceCheck == null)
+            {
+                throw new DomainException("There is no active check for given covid pass");
+            }
+
             var newStatus = request.Status switch
             {
                 Contracts.Requests.PresenceCheckStatus.OK => PresenceCheckStatus.OK,
