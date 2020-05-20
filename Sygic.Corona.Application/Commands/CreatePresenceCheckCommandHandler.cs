@@ -34,7 +34,8 @@ namespace Sygic.Corona.Application.Commands
             foreach (var profile in profiles)
             {
                 var activeCheck = await context.PresenceChecks.AsNoTracking()
-                    .Where(x => x.ProfileId == profile.Id && now < x.DeadLineCheck)
+                    .Where(x => x.ProfileId == profile.Id && now < x.DeadLineCheck 
+                        && x.Status != PresenceCheckStatus.OK)
                     .ToListAsync(cancellationToken);
 
                 if (!activeCheck.Any() && profile.ActiveQuarantine(now))
