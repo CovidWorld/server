@@ -10,6 +10,7 @@ namespace Sygic.Corona.Domain
         public DateTime UpdatedOn { get; private set; }
         public DateTime DeadLineCheck { get; private set; }
         public PresenceCheckStatus Status { get; private set; }
+        public int? Severity { get; private set; }
 
         public PresenceCheck(long profileId, DateTime createdOn, DateTime deadLineCheck, PresenceCheckStatus status)
         {
@@ -29,6 +30,11 @@ namespace Sygic.Corona.Domain
         public bool IsActive(DateTime checkTime)
         {
             return checkTime < DeadLineCheck;
-        } 
+        }
+
+        public void SetSeverity(int severity) 
+        {
+            Severity = severity;
+        }
     }
 }

@@ -37,6 +37,7 @@ namespace Sygic.Corona.Application.Commands
             profile.AddAreaExit(exit);
 
             var check = new PresenceCheck(profile.Id, now, now, PresenceCheckStatus.LEFT);
+            check.SetSeverity(exit.Severity);
             profile.AddPresenceCheck(check);
 
             await repository.UnitOfWork.SaveChangesAsync(cancellationToken);
