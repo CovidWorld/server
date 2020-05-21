@@ -30,6 +30,7 @@ namespace Sygic.Corona.Application.Queries
             }
 
             var checks = await context.PresenceChecks.AsNoTracking()
+                    .Where(x => request.From <= x.CreatedOn && x.CreatedOn <= request.To && x.DeadLineCheck <= DateTime.UtcNow)
                     .Join(context.Profiles,
                         check => check.ProfileId,
                         profile => profile.Id,
@@ -38,8 +39,8 @@ namespace Sygic.Corona.Application.Queries
                             Check = check,
                             profile.CovidPass,
                             profile.LastPositionReportTime
-                        })
-                    .OrderBy(x => x.Check.CreatedOn)
+                        })                    
+                    .OrderBy(x => x.Check.CreatedOn)                  
                     .ToListAsync(cancellationToken);
 
             var presenceChecks = checks.Select(x =>
@@ -48,11 +49,12 @@ namespace Sygic.Corona.Application.Queries
                     CovidPass = x.CovidPass,
                     Status = ToResponseStatus(x.Check.Status),
                         // DateTime retrieved from DB has DateTimeKind.Unspecified, which defaults to Local. We stored UTC and want to retrieve it as UTC.
-                        CreatedOn = new DateTime(x.Check.CreatedOn.Ticks, DateTimeKind.Utc) + request.Offset, // offset for NCZI (note that it possibly produces dates in the future)
-                        UpdatedOn = new DateTime(x.Check.UpdatedOn.Ticks, DateTimeKind.Utc) + request.Offset,
+                        CreatedOn = new DateTime(x.Check.CreatedOn.Ticks, DateTimeKind.Utc),
+                        UpdatedOn = new DateTime(x.Check.UpdatedOn.Ticks, DateTimeKind.Utc),
                     LastHeartbeat = x.LastPositionReportTime.HasValue
                             ? new DateTime(x.LastPositionReportTime.Value.Ticks, DateTimeKind.Utc)
-                            : default(DateTime?)
+                            : default(DateTime?),
+                    Severity = x.Check.Severity
                 })
                 .ToList();
 

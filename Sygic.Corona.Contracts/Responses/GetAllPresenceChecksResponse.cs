@@ -16,5 +16,6 @@ namespace Sygic.Corona.Contracts.Responses
         public DateTime UpdatedOn { get; set; }
         public DateTime? LastHeartbeat { get; set; }
         public PresenceCheckStatus Status { get; set; }
+        public int? Severity { get; set; }
     }
 }
